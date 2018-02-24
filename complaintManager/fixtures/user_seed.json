@@ -1,0 +1,28 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$30000$ACkoXLx3TW9b$saKgWqXjamx7PiMdoPKAiXJyrJUudI/qn3Raya2A6C4=",
+        "last_login": "2017-04-08T11:09:51.995Z",
+        "is_superuser": true,
+        "username": "sarpras",
+        "first_name": "Sumiatun",
+        "last_name": "Munawarotun",
+        "email": "sarpras@sarpras.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2017-04-08T04:02:48Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "complaintManager.member",
+    "pk": 1,
+    "fields": {
+      "role": 15,
+      "user": 1
+    }
+}
+]

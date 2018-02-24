@@ -1,0 +1,68 @@
+{% extends "complaintManager/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default panel-light">
+            <div class="panel-heading">
+                <h3 class="panel-title">Menyunting Keluhan</h3>
+            </div>
+            <div class="panel-body desc-panel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form method="POST" action="{% url 'complaintManager:complaint_edit' pk %}">
+                        {% csrf_token %}
+                            <div class="form-group">
+                                <label class="control-label" for="{{ complaint_form.username.id_for_label }}">Judul :</label>
+                                {{ complaint_form.title }}
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="{{ complaint_form.assigned_divisions.id_for_label }}">Jenis Keluhan :</label>
+                                {{ complaint_form.assigned_divisions }}
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="{{ complaint_form.leader.id_for_label }}">Divisi Leader Keluhan :</label>
+                                {{ complaint_form.leader }}
+                                {% if complaint_form.leader.errors %}
+                										<ul class="error-list">
+                										{% for error in complaint_form.leader.errors %}
+                												<li style="color: red;">{{ error|escape }}</li>
+                										{% endfor %}
+                										</ul>
+                								{% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="{{ complaint_form.description.id_for_label }}">Deskripsi :</label>
+                                {{ complaint_form.description }}
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="{{ complaint_form.priority.id_for_label }}">Prioritas :</label>
+                                {{ complaint_form.priority }}
+                            </div>
+                            <div class="form-group">
+                                {% if complaint_form.reported.errors %}
+                                    <ul>
+                                    {% for error in complaint_form.reported.errors %}
+                                        <li style="color: red;">{{ error|escape }}</li>
+                                    {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                <label class="control-label" for="{{ complaint_form.reported.id_for_label }}">Waktu laporan :</label>
+                                {{ complaint_form.reported }}
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="{{ complaint_form.status.id_for_label }}">Status :</label>
+                                {{ complaint_form.status }}
+                            </div>
+                            <div class="edit-buttons">
+                                <button type="submit" class="btn btn-success">Save</button>
+                                <a href="{% url 'complaintManager:complaint_delete' pk %}" class="btn btn-danger pull-right">Delete</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

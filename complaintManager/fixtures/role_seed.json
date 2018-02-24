@@ -1,0 +1,122 @@
+[
+  {
+    "model": "complaintManager.role",
+    "pk": 1,
+    "fields": {
+      "name": "PU",
+      "divisions": [1]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 2,
+    "fields": {
+      "name": "PG",
+      "divisions": [2]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 3,
+    "fields": {
+      "name": "OG",
+      "divisions": [3]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 4,
+    "fields": {
+      "name": "KS",
+      "divisions": [4]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 5,
+    "fields": {
+      "name": "IA",
+      "divisions": [5]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 6,
+    "fields": {
+      "name": "PDA",
+      "divisions": [6]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 7,
+    "fields": {
+      "name": "PHA",
+      "divisions": [7]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 8,
+    "fields": {
+      "name": "PD",
+      "divisions": [8]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 9,
+    "fields": {
+      "name": "S",
+      "divisions": [9]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 10,
+    "fields": {
+      "name": "D",
+      "divisions": [1,2,3,4,5,6,7,8,9]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 11,
+    "fields": {
+      "name": "WD",
+      "divisions": [1,2,3,4,5,6,7,8,9]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 12,
+    "fields": {
+      "name": "KAI",
+      "divisions": [5,6,7,8]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 13,
+    "fields": {
+      "name": "KO",
+      "divisions": [3,4]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 14,
+    "fields": {
+      "name": "KPA",
+      "divisions": [1,2]
+    }
+  },
+  {
+    "model": "complaintManager.role",
+    "pk": 15,
+    "fields": {
+      "name": "SA",
+      "divisions": [1,2,3,4,5,6,7,8,9]
+    }
+  }
+]

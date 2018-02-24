@@ -1,0 +1,154 @@
+{% extends "complaintManager/base.html" %}
+
+{% block content %}
+{% if success_edit %}
+    <center id="success-info" style="background-color: #9fff56;">
+        <span class="close">&times;</span>
+        <style type="text/css">
+            #success-info {
+                min-height: 40px;
+            }
+
+            .close {
+                margin: 5px 5px 0 0;
+                color: black;
+                float: right;
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: #444;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        </style>
+        <p>Suntingan berhasil!</p>
+    </center>
+{% endif %}
+{% if success_create %}
+    <center id="success-info" style="background-color: #9fff56;">
+        <span class="close">&times;</span>
+        <style type="text/css">
+            #success-info {
+                min-height: 40px;
+            }
+
+            .close {
+                margin: 5px 5px 0 0;
+                color: black;
+                float: right;
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: #444;
+                text-decoration: none;
+                cursor: pointer;
+            }
+        </style>
+        <p>Keluhan berhasil dibuat!</p>
+        <p>Klik <a href="{% url 'complaintManager:complaint_create' %}">di sini</a> untuk membuat keluhan lagi</p>
+    </center>
+{% endif %}
+<div class="search-input">
+    <form class="">
+        <div class="input-group col-md-12">
+            <input type="text" class="form-control" placeholder="Insert your search keyword" {% if search_query %}value={{ search_query }}{% endif %} name="search" />
+            <span class="input-group-btn">
+                <button class="btn btn-info" type="submit">
+                    <i class="glyphicon glyphicon-search"></i>
+                </button>
+            </span>
+        </div>
+    </form>
+</div>
+<br>
+<div class="panel panel-default panel-light">
+  <div class="panel-heading">
+    <div class="row">
+           <div class="col-md-4">
+             <h4 clas="panel-title">{{ title }}</h3>
+           </div>
+       </div>
+  </div>
+  <div class="panel-body nopadding">
+    <table class="table table-condensed table-hover summary-report">
+      <tbody id="summary_report">
+        <tr>
+          <th>Tanggal</th>
+          <th>Judul</th>
+          <th>Pelapor</th>
+          <th></th>
+        </tr>
+        {% for complaint in complaints %}
+        <tr>
+          <td class="date-time">
+            <i class="fa fa-calendar"></i> {{ complaint.reported | date:"j M Y - G.i" }}
+          </td>
+          <td><a href="{% url 'complaintManager:complaint_status' complaint.id %}">{{ complaint.title }}</a></td>
+          <td class="contact-note">
+            <strong>{{ complaint.informer.name }}</strong>
+          </td>
+          <td>
+            {% if user.member.role.name == 'SA' %}
+              <button type="button" class="btn btn-danger" id="delete-keluhan"
+              data-toggle="modal" data-target="#deleteKeluhan">Delete</button>
+              <a href="{% url 'complaintManager:complaint_edit' complaint.id %}" class="btn btn-warning">Alokasi Unit Kerja</a>
+              <div class="modal fade" id="deleteKeluhan" role="dialog">
+                <div class="modal-dialog">
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Delete Keluhan "{{ complaint.title }}"</h4>
+                    </div>
+                    <div class="modal-body">
+                      <div class="input-group col-xs-12" id="modal1">
+                        <center>Anda yakin ingin menghapus keluhan ini?</center>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <a href="{% url 'complaintManager:complaint_delete' complaint.id %}" class="btn btn-danger" id="update-status">Ya, hapus!</a>
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Batalkan</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if complaints.has_previous %}
+                    <a href="?page={{ complaints.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="current">
+                    Page {{ complaints.number }} of {{ complaints.paginator.num_pages }}.
+                </span>
+                {% if complaints.has_next %}
+                    <a href="?page={{ complaints.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+    var span = document.getElementsByClassName("close")[0];
+    var modal = document.getElementById('success-info');
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+</script>
+{% endblock %}

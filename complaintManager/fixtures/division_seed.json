@@ -1,0 +1,65 @@
+[
+  {
+    "model": "complaintManager.division",
+    "pk": 1,
+    "fields": {
+      "name": "PU"
+    }
+  },
+  {
+    "model": "complaintManager.division",
+    "pk": 2,
+    "fields": {
+      "name": "PG"
+    }
+  },
+  {
+    "model": "complaintManager.division",
+    "pk": 3,
+    "fields": {
+      "name": "OG"
+    }
+  },
+  {
+    "model": "complaintManager.division",
+    "pk": 4,
+    "fields": {
+      "name": "KS"
+    }
+  },
+  {
+    "model": "complaintManager.division",
+    "pk": 5,
+    "fields": {
+      "name": "IA"
+    }
+  },
+  {
+    "model": "complaintManager.division",
+    "pk": 6,
+    "fields": {
+      "name": "PDA"
+    }
+  },
+  {
+    "model": "complaintManager.division",
+    "pk": 7,
+    "fields": {
+      "name": "PHA"
+    }
+  },
+  {
+    "model": "complaintManager.division",
+    "pk": 8,
+    "fields": {
+      "name": "PD"
+    }
+  },
+  {
+    "model": "complaintManager.division",
+    "pk": 9,
+    "fields": {
+      "name": "S"
+    }
+  }
+]

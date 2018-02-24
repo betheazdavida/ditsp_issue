@@ -1,0 +1,129 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Manajemen Keluhan</title>
+  <link rel="shortcut icon" href="{% static 'complaintManager/img/logo-itb.png' %}" />
+
+  <!-- Bootstrap Core CSS -->
+  <link href="{% static 'complaintManager/css/bootstrap.min.css' %}" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'complaintManager/css/main.css' %}">
+
+  <!-- Custom Fonts -->
+  <link href="{% static 'complaintManager/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Raleway:500,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans" rel="stylesheet">
+
+  {% block extra_css %}{% endblock %}
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2 sidebar" id="sidebar-wrapper">
+        <ul class="nav nav-stacked nav-pills">
+          <div class="text-center">
+            <a href="{% url 'complaintManager:index' %}" class="sidebar-title">
+              <img id="logo-itb" height="120px" width="120px" name="Logo" class="img-circle" src="{% static 'complaintManager/img/logo-itb.png' %}" alt="logo-itb">
+              <h5 id="title">Manajemen Keluhan</h5>
+              <h5 id="title">Institut Teknologi Bandung</h5>
+            </a>
+            <style type="text/css">
+              #logo-itb {1
+                margin-top: 10px;
+                margin-bottom: 10px;
+              }
+            </style>
+            {% if user.is_authenticated %}
+            <!-- Tolong ganti ini butut -->
+            <div class="user-profile text-left" style="color: white; padding: 0 1rem;">
+              <h6 id="title">Welcome, {{ user.username }}!</h5>
+              <h6 id="title">{{ user.member.role }}</h5>
+            </div>
+            {% endif %}
+          </div>
+          {% if user.is_authenticated %}
+          {% block sidebar %}
+          <ul class="nav">
+            <li class="sidebar-menu-section-header">
+              <i class="fa fa-envelope"></i> Keluhan
+            </li>
+            {% if user.member.isSuperadmin %}
+            <li><a href="{% url 'complaintManager:complaint_create' %}">
+              <i class="fa fa-plus-square"></i> Tambah
+            </a></li>
+            {% endif %}
+            <li><a href="{% url 'complaintManager:complaint_list' %}">
+              <i class="fa fa-list"></i> Daftar Keluhan
+            </a></li>
+            {% if user.member.isSuperadmin %}
+            <li><a href="{% url 'complaintManager:complaint_list_public' %}">
+              <i class="fa fa-list-alt"></i> Daftar Keluhan Publik
+            </a></li>
+            {% endif %}
+            <li class="sidebar-menu-section-header">
+              <i class="fa fa-users"></i> User
+            </li>
+            {% if user.member.isSuperadmin %}
+              <li><a href="{% url 'complaintManager:user_index' %}">
+                <i class="fa fa-user-plus"></i> User Management
+              </a></li>
+              <li><a href="{% url 'complaintManager:informer_origin_index' %}">
+                <i class="fa fa-address-book"></i> Asal Pelapor Management
+              </a></li>
+            {% endif %}
+            <li><a href="{% url 'complaintManager:logout' %}">
+              <i class="fa fa-sign-out"></i> Keluar
+            </a></li>
+          </ul>
+          {% endblock %}
+          {% endif %}
+        </ul>
+      </div>
+
+      <div class="col-md-10 content-container">
+        <div class="page-content-container">
+          {% block content %}
+          {% endblock %}
+        </div>
+
+        <!-- Footer -->
+        <footer id="contact">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-lg-10 col-lg-offset-1 text-center">
+                <p class="text-muted">Copyright &copy; Tim Pengembang Sistem Manajemen Keluhan 2017</p>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="{% static 'complaintManager/js/jquery.js' %}"></script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="{% static 'complaintManager/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'complaintManager/js/highcharts.js' %}"></script>
+  <script src="{% static 'complaintManager/js/exporting.js' %}"></script>
+
+  {% block script %}{% endblock %}
+</body>
+</html>

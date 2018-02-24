@@ -1,0 +1,173 @@
+{% extends "complaintManager/base.html" %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default panel-light">
+	    	<div class="panel-heading">
+				<h3 class="panel-title">Form Pelaporan Keluhan</h3>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-6">
+						<h4>Silakan isi form keluhan anda di bawah ini</h4>
+						<form method="POST" action="{% url 'complaintManager:complaint_create' %}" enctype="multipart/form-data">
+							{% csrf_token %}
+							<div class="form-group">
+								<label class="control-label" for="informer">Nama Pelapor</label>
+								{{informer_form.name}}
+							</div>
+							<div class="form-group">
+								<label class="control-label" for="phone-number">Nomor Telepon</label>
+								{{informer_form.phone_number}}
+								{% if informer_form.phone_number.errors %}
+										<ul class="error-list">
+										{% for error in informer_form.phone_number.errors %}
+												<li style="color: red;">{{ error|escape }}</li>
+										{% endfor %}
+										</ul>
+								{% endif %}
+							</div>
+							<div class="form-group">
+								<label class="control-label" for="email">E-mail</label>
+								{{informer_form.email}}
+								{% if informer_form.email.errors %}
+										<ul class="error-list">
+										{% for error in informer_form.email.errors %}
+												<li style="color: red;">{{ error|escape }}</li>
+										{% endfor %}
+										</ul>
+								{% endif %}
+							</div>
+							<div class="form-group">
+								<label class="control-label" for="origin">Kategori Sumber</label>
+								<select class="form-control" id="id_master_origin" onchange="hideOriginOptions()">
+									<option value="None" selected>---------</option>
+									<option value="Pimpinan">Pimpinan</option>
+									<option value="Unit">Unit ITB</option>
+									<option value="Intern">Intern Direktorat Sarana dan Prasarana</option>
+									<option value="Civitas">Civitas Akademik</option>
+									<option value="Eksternal">Eksternal ITB (Masyarakat, Tamu, dan Umum)</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label class="control-label" for="origin">Rincian Sumber</label>
+								{{informer_form.origin}}
+							</div>
+							<div class="form-group">
+								<label class="control-label" for="title">Subjek Keluhan</label>
+								{{complaint_form.title}}
+							</div>
+							<div class="form-group">
+								<label class="control-label" for="location">Nama Lokasi Keluhan</label>
+								{{location_form.name}}
+							</div>
+							<div class="form-group">
+								<label class="control-label" for="assigned_divisions">Jenis Keluhan</label>
+								{{complaint_form.assigned_divisions}}
+							</div>
+							<div class="form-group">
+								<label class="control-label" for="leader">Divisi Leader Keluhan</label>
+								{{complaint_form.leader}}
+								{% if complaint_form.leader.errors %}
+										<ul class="error-list">
+										{% for error in complaint_form.leader.errors %}
+												<li style="color: red;">{{ error|escape }}</li>
+										{% endfor %}
+										</ul>
+								{% endif %}
+							</div>
+							<div class="form-group">
+								<label class="control-label" for="description">Keluhan</label>
+								{{complaint_form.description}}
+							</div>
+							<div class ="form-group">
+								<label class="control-label" for="files">Masukkan Gambar</label>
+								<input type="file" name="images" accept="image/*" multiple>
+							</div>
+							<div class="text-right">
+								<button type="submit" class="btn btn-default">Submit</button>
+							</div>
+							{{location_form.lat}}
+							{{location_form.lon}}
+						</form>
+					</div>
+					<div class="col-md-6">
+						<h4>Lokasi Kejadian: </h4>
+						<div id="map" style="height:400px; width:100%;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+	// Handling informer origin's dropdowns
+	function hideOriginOptions() {
+		var masterOrigin = $('#id_master_origin').val();
+		var options = $('#id_informer-origin').children();
+		$(options[0]).prop('selected', true);
+		for (var i = 1; i < options.length; i++) {
+			var option = options[i];
+			if (option.text.indexOf(masterOrigin) === -1 || masterOrigin === 'None') {
+				$(option).prop('disabled', true);
+			} else {
+				$(option).prop('disabled', false);
+			}
+		}
+	}
+
+	hideOriginOptions('None');
+</script>
+<script>
+	function initMap() {
+    	var intel = {lat: -6.890359, lng: 107.610379};
+    	var map = new google.maps.Map(document.getElementById('map'), {
+          	zoom: 17,
+          	center: intel
+        });
+        setMarkers(map);
+  	}
+
+  	var locations = [
+        ['Labtek 5', -6.890533, 107.609864, 2], //labtek 5
+    ]
+
+    function setMarkers(map) {
+	  	var image = {
+		    url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+		    size: new google.maps.Size(20, 32),
+		    origin: new google.maps.Point(0, 0),
+		    anchor: new google.maps.Point(0, 32)
+	 	};
+	  	var shape = {
+	    	coords: [1, 1, 1, 20, 18, 20, 18, 1],
+	    	type: 'poly'
+	  	};
+	  	for (var i = 0; i < locations.length; i++) {
+	    	var loc = locations[i];
+	    	var tit = locations[i][0];
+	    	var marker = new google.maps.Marker({
+	      		position: {lat: loc[1], lng: loc[2]},
+	      		map: map,
+	      		icon: image,
+	      		shape: shape,
+	      		zIndex: loc[3],
+	      		draggable: true,
+	   		 });
+			google.maps.event.addListener(marker, 'dragend', function (event) {
+			    document.getElementById("lat").value = this.getPosition().lat();
+			    document.getElementById("lng").value = this.getPosition().lng();
+			});
+	  	}
+	}
+	document.getElementById("lat").value = -6.890533;
+	document.getElementById("lng").value = 107.609864;
+</script>
+<script async defer
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR7Z1yfZkNc2FIPYpqJOnNgY-CCH2Ptc&callback=initMap">
+</script>
+{% endblock %}

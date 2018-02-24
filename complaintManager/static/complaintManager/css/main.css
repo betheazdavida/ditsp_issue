@@ -1,0 +1,121 @@
+body {
+  background-color: hsl(207, 76%, 29%);
+}
+
+.content-container {
+  background-color: #fff;
+  min-height: 100vh;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+}
+
+footer {
+  border-top: 1px solid hsl(207, 76%, 86%);
+  padding-top: 2rem;
+  margin-top: 2rem;
+}
+
+.sidebar {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.2rem;
+  overflow-y: auto;
+  right: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.sidebar-title {
+  color: white;
+  display: block;
+}
+
+.sidebar-title:hover {
+  color: hsl(207, 76%, 86%);
+  text-decoration: none;
+}
+
+.sidebar .nav > li {
+  margin: 1rem 0;
+}
+
+.sidebar .nav > li > a {
+  border-radius: 0;
+  background-color: hsl(207, 76%, 66%);
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+
+  color: hsl(207, 76%, 31%);
+}
+
+.sidebar .nav > li > a:hover {
+  background-color: hsl(207, 76%, 71%);
+}
+
+.page-content-container {
+  min-height: calc(100vh - 20px);
+}
+
+.sidebar-menu-section-header {
+  padding: 0rem 1.5rem;
+  line-height: 21px;
+  margin-top: 30.5px;
+  font-weight: 700;
+
+  color: hsl(207, 76%, 81%);
+}
+
+#id_complaint-assigned_divisions {
+  list-style: none;
+  padding-left: 0;
+}
+
+#id_complaint-status {
+  list-style: none;
+  padding-left: 0;
+}
+
+#title{
+  font-family: 'Merriweather Sans', sans-serif;
+}
+
+.user-profile {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#success-info {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  background-color: #9fff56;
+}
+
+#success-info p {
+  margin-bottom: 0;
+}
+
+.close {
+  margin: -2px 5px 0 0;
+  color: black;
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #444;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.error-list {
+  list-style: none;
+  padding-left: 0;
+  padding-top: 4px;
+}
+
+select option[disabled] {
+  display: none;
+}

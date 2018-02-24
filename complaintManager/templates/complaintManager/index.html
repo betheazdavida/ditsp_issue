@@ -1,0 +1,124 @@
+{% extends "complaintManager/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default panel-light">
+      <div class="panel-heading">
+        <h3 class="panel-title">Unduh Laporan Keluhan</h3>
+      </div>
+      <div class="panel-body nopadding">
+        <div class="form-group">
+          <form method="GET" action="{% url 'complaintManager:laporan' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-md-4">
+              <label for="start_date"> Dari: </label>
+              <input class="form-control" type="date" name="start_date" id="start_date">
+            </div>
+            <div class="col-md-4">
+              <label for="end_date"> Sampai: </label>
+              <input class="form-control" type="date" name="end_date" id="end_date">
+            </div>
+            <div class="col-md-4">
+              <label>Unduh</label><br/>
+              <button type="submit" class="btn btn-primary">
+                Unduh Laporan
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-default panel-light">
+      <div class="panel-heading">
+        <h3 class="panel-title">Ringkasan Keluhan</h3>
+      </div>
+      <div class="panel-body">
+        <div id="complain-total" style="height:300px;">
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default panel-light panel-summary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Keluhan Terbaru</h3>
+      </div>
+      <div class="panel-body nopadding">
+        <table class="table table-condensed table-hover summary-report">
+          <tbody id="summary_report">
+            <tr>
+              <th>Tanggal</th>
+              <th>Judul</th>
+              <th>Operator</th>
+            </tr>
+            {% for complaint in latest_new %}
+              <tr>
+                <td class="date-time">
+                  <i class="fa fa-calendar"></i> {{ complaint.reported | date:"j M Y - G.i" }}
+                </td>
+                <td>{{ complaint.title }}</td>
+                <td class="contact-note">
+                  <strong>{% for division in complaint.assigned_divisions.all %}
+                    {{ division.name }}{% if not forloop.last %}, {% endif %}
+                  {% endfor %}</strong>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="panel panel-default panel-light">
+      <div class="panel-heading">
+        <h3 class="panel-title">Penerimaan dan Penyelesaian Keluhan</h3>
+      </div>
+      <div class="panel-body">
+        <div id="complain-dispatched" style="height:300px;">
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default panel-light panel-summary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Pengerjaan Terbaru</h3>
+      </div>
+      <div class="panel-body nopadding">
+        <table class="table table-condensed table-hover summary-report">
+          <tbody id="summary_report">
+            <tr>
+              <th>Tanggal</th>
+              <th>Keluhan</th>
+              <th>Unit Kerja</th>
+            </tr>
+            {% for complaint in latest_progress %}
+              <tr>
+                <td class="date-time">
+                  <i class="fa fa-calendar"></i> {{ complaint.reported | date:"j M Y - G.i" }}
+                </td>
+                <td>{{ complaint.title }}</td>
+                <td class="contact-note">
+                  <strong>{% for division in complaint.assigned_divisions.all %}
+                    {{ division.name }}{% if not forloop.last %}, {% endif %}
+                  {% endfor %}</strong>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <a href="{% url 'complaintManager:laporan'%}" class="btn btn-primary">Download Laporan</a> -->
+
+{% endblock %}
+
+{% block script %}
+<div id="graph-data" data-graph="{{ graph_json }}"></div>
+<script src="{% static 'complaintManager/js/home.js' %}"></script>
+{% endblock %}

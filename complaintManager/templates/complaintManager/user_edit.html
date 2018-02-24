@@ -1,0 +1,57 @@
+{% extends "complaintManager/base.html" %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default panel-light">
+	    	<div class="panel-heading">
+				<h3 class="panel-title">Menyunting User</h3>
+			</div>
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<form method="POST" action="{% url 'complaintManager:user_edit' pk %}">
+              {% csrf_token %}
+              <div class="form-group">
+              	<label class="control-label" for="{{ user_form.username.id_for_label }}">Username :</label>
+              	{{ user_form.username }}
+								{% if user_form.username.errors %}
+										<ul class="error-list">
+										{% for error in user_form.username.errors %}
+												<li style="color: red;">{{ error|escape }}</li>
+										{% endfor %}
+										</ul>
+								{% endif %}
+              </div>
+              <div class="form-group">
+              	<label class="control-label" for="{{ user_form.email.id_for_label }}">Email :</label>
+              	{{ user_form.email }}
+								{% if user_form.email.errors %}
+										<ul class="error-list">
+										{% for error in user_form.email.errors %}
+												<li style="color: red;">{{ error|escape }}</li>
+										{% endfor %}
+										</ul>
+								{% endif %}
+              </div>
+              <div class="form-group">
+              	<label class="control-label" for="{{ user_form.first_name.id_for_label }}">First Name :</label>
+              	{{ user_form.first_name }}
+              </div>
+              <div class="form-group">
+              	<label class="control-label" for="{{ user_form.last_name.id_for_label }}">Last Name :</label>
+              	{{ user_form.last_name}}
+              </div>
+              <div class="form-group">
+              	<label class="control-label" for="{{ member_form.roles.id_for_label }}e">Role :</label>
+              	{{ member_form.role }}
+              </div>
+              <button type="submit" class="btn btn-primary pull-right">Submit</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{
+  "app_type": "wsgi",
+  "startup_file": "passenger_wsgi.py",
+  "python": "python3",
+  "environment": "production",
+  "port": 80,
+  "daemonize": true,
+  "user": "root"
+}

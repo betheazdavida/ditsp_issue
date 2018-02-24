@@ -1,0 +1,11 @@
+{% extends "complaintManager/base.html" %}
+
+{% block content %}
+<div class="text-center">
+  <h2>Terima kasih!</h2><br>
+  <p>Keluhan Anda telah kami terima. Pemberitahuan lebih lanjut akan kami kirimkan melalui surel yang Anda berikan.</p><br>
+  <div>
+    <a href="{% url 'complaintManager:complaint_create_public' %}" class="btn btn-primary">Masukkan Keluhan Lain</a>
+  </div>
+</div>
+{% endblock %}

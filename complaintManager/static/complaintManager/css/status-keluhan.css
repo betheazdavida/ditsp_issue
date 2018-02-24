@@ -1,0 +1,62 @@
+.status-img {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.status-line {
+  padding-top: 0.5rem;
+  padding-bottom: 2rem;
+}
+
+#info-keluhan{
+  padding-top: 2rem;
+}
+
+#tambah-unit{
+  background-color: #0099ff;
+  color: #ffffff;
+}
+
+#tambah-log{
+  background-color: #007fff;
+  color: #ffffff;
+}
+
+#update_status{
+  background-color: #00ccff;
+  color: #ffffff;
+}
+
+#modal1{
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.status-indicator {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  color: white;
+  padding: 2rem;
+}
+
+.status-segment {
+  padding: 2rem;
+  border-radius: 1rem;
+  background-color: gray;
+}
+
+.status-connector {
+  height: 1rem;
+  flex-grow: 1;
+  background-color: gray;
+}
+
+.status-indicator.mod-submitted .mod-submitted,
+.status-indicator.mod-progress .mod-progress,
+.status-indicator.mod-finished .mod-finished {
+  background-color: #00A2E8;
+}
