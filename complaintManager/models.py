@@ -45,7 +45,7 @@ class Informer(models.Model):
     name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
     phone_number = models.CharField(max_length=50)
-    origin = models.ForeignKey(InformerOrigin, blank=True, null=True)
+    origin = models.ForeignKey(InformerOrigin, blank=True, null=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return '{} from {}'.format(self.name, self.origin)
@@ -84,7 +84,7 @@ class Complaint(models.Model):
     assigned_divisions = models.ManyToManyField(Division, blank=True)
     reported = models.DateTimeField(default=timezone.now)
     is_public = models.BooleanField()
-    leader = models.ForeignKey(Division, blank=True, null=True, related_name='leader')
+    leader = models.ForeignKey(Division, blank=True, null=True, related_name='leader', on_delete=models.PROTECT)
 
     def __str__(self):
         return self.title
@@ -112,7 +112,7 @@ class Log(models.Model):
         ('ACRMD', 'Perubahan oleh Admin, yang Menghilangkan Penandaan Selesai'),
     )
 
-    creator = models.ForeignKey(User, null=True)
+    creator = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
     complaint = models.ForeignKey(Complaint, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
     description = models.TextField(max_length=500)
@@ -125,7 +125,7 @@ class Log(models.Model):
 class ComplaintImages(models.Model):
     complaint = models.ForeignKey(Complaint, on_delete=models.CASCADE)
     src = models.ImageField(upload_to=get_upload_path_images)
-    log = models.ForeignKey(Log, blank=True, null=True)
+    log = models.ForeignKey(Log, blank=True, null=True, on_delete=models.PROTECT)
 
 
 class Role(models.Model):
