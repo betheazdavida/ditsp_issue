@@ -35,7 +35,7 @@ SECRET_KEY = production_secrets.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not IS_PRODUCTION
 
-ALLOWED_HOSTS = ['localhost', '167.205.35.108', 'pplk2a.if.itb.ac.id']
+ALLOWED_HOSTS = ['127.0.0.1','localhost', '167.205.35.108', 'pplk2a.if.itb.ac.id']
 
 
 # Application definition
