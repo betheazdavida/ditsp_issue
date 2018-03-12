@@ -101,31 +101,6 @@
 
           <td>
             <a href="{% url 'complaintManager:complaint_status' complaint.id %}" class="btn btn-primary">Detail</a>
-            {% if user.member.role.name == 'SA' %}
-              <!--<a href="{% url 'complaintManager:complaint_edit' complaint.id %}" class="btn btn-warning">Edit</a>-->
-            <button type="button" class="btn btn-danger" id="delete-keluhan"
-            data-toggle="modal" data-target="#deleteKeluhan">Delete</button>
-            <div class="modal fade" id="deleteKeluhan" role="dialog">
-              <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Delete Keluhan "{{ complaint.title }}"</h4>
-                  </div>
-                  <div class="modal-body">
-                    <div class="input-group col-xs-12" id="modal1">
-                      <center>Anda yakin ingin menghapus keluhan ini?</center>
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <a href="{% url 'complaintManager:complaint_delete' complaint.id %}" class="btn btn-danger" id="update-status">Ya, hapus!</a>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Batalkan</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {% endif %}
           </td>
 
 

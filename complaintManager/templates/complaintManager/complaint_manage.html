@@ -14,13 +14,6 @@
           <div class= "panel-heading">
             <h3>
               Informasi Keluhan
-              {% if user.member.isSuperadmin %}
-              <small>
-                <a href="{% url 'complaintManager:complaint_edit' complaint.id %}" class="btn btn-warning">
-                  Edit
-                </a>
-              </small>
-              {% endif %}
             </h3>
             <hr>
           </div>
@@ -99,24 +92,7 @@
                             {{log.date}} : {{log.description}}
                           </p>
                         </div>
-                        <div class="col-md-3">
-                          <div align="right">
-                              <button class="btn btn-info" type="button" data-toggle="modal" data-target="#editlog" onclick="changeID({{log.pk}})">
-                                  <div class="glyphicon glyphicon-pencil"</div>
-                              </button>
-                              <button class="btn btn-info" type="button" data-toggle="modal" data-target="#imagelog" onclick="changeID({{log.pk}})">
-                                  <div class="glyphicon glyphicon-camera"</div>
-                              </button>
-                              <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#deletelog" onclick="changeID({{log.pk}})">
-                                  <div class="glyphicon glyphicon-trash"></div>
-                              </button>
-                          </div>
-                        </div>
                       </div>
-
-
-
-
                       <div class="row">
                         {% for image in log.complaintimages_set.all %}
                         <div class="col-md-4">
@@ -124,8 +100,6 @@
                         </div>
                         {% endfor %}
                       </div>
-
-
                     </li>
                     {% endfor %}
                   </ul>
