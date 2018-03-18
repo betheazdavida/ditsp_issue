@@ -373,7 +373,10 @@ def complaint_list(request):
         accessible_divisions = request.user.member.role.divisions.all()
         accessible_complaints = Complaint.objects.filter(
             assigned_divisions__in=accessible_divisions
+        ) | Complaint.objects.filter(
+            informer__email__iexact=request.user.email
         )
+        accessible_complaints = accessible_complaints.distinct()
 
     complaints_unpaginated = accessible_complaints.exclude(
         assigned_divisions=None
