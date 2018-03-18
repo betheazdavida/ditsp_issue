@@ -49,6 +49,7 @@
           <td>{{ user.email }}</td>
           <td>{{ user.first_name }} {{user.last_name}}</td>
           <td>{{ user.member.role }}</td>
+          <td>{{ user.member.phone }}</td>
           <td>
             <a href="{% url 'complaintManager:user_edit' user.pk %}" class="btn btn-primary">Edit</a>
             <button id='{{ user.pk }}-{{ user.username }}'class="btn btn-danger user-delete-btn" data-toggle="modal" data-target="#myModal">Delete</button>
