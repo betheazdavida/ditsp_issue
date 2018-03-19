@@ -102,7 +102,7 @@
           <td>
             <a href="{% url 'complaintManager:complaint_status' complaint.id %}" class="btn btn-primary">Detail</a>
             {% if user.member.role.name == 'SA' %}
-              <!--<a href="{% url 'complaintManager:complaint_edit' complaint.id %}" class="btn btn-warning">Edit</a>-->
+              <a href="{% url 'complaintManager:complaint_edit' complaint.id %}" class="btn btn-warning">Edit</a>
             <button type="button" class="btn btn-danger" id="delete-keluhan"
             data-toggle="modal" data-target="#deleteKeluhan">Delete</button>
             <div class="modal fade" id="deleteKeluhan" role="dialog">
