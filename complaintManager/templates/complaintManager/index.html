@@ -12,15 +12,22 @@
         <div class="form-group">
           <form method="GET" action="{% url 'complaintManager:laporan' %}" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label for="start_date"> Dari: </label>
               <input class="form-control" type="date" name="start_date" id="start_date">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label for="end_date"> Sampai: </label>
               <input class="form-control" type="date" name="end_date" id="end_date">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+              <label for="type"> Tipe: </label>
+              <select class="form-control" name="type" id="type">
+                <option value="csv">Excel (.csv)</option>
+                <option value="pdf">Portable Format (.pdf)</option>
+              </select>
+            </div>
+            <div class="col-md-3">
               <label>Unduh</label><br/>
               <button type="submit" class="btn btn-primary">
                 Unduh Laporan
