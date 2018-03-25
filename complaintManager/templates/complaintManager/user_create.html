@@ -35,6 +35,10 @@
 								{% endif %}
 							</div>
 							<div class="form-group">
+								<label class="control-label" for="{{ user_form.phone.id_for_label }}">Phone :</label>
+								{{ member_form.phone }}
+							</div>
+							<div class="form-group">
 								<label class="control-label" for="{{ user_form.password.id_for_label }}">Password :</label>
 								{{ user_form.password}}
 								{% if user_form.password.errors %}
@@ -56,6 +60,10 @@
 							<div class="form-group">
 								<label class="control-label" for="{{ member_form.roles.id_for_label }}e">Role :</label>
 								{{ member_form.role }}
+							</div>
+							<div class="form-group">
+								<label class="control-label" for="{{ member_form.origins.id_for_label }}e">Origin :</label>
+								{{ member_form.origin }}
 							</div>
 							<button type="submit" class="btn btn-primary pull-right">Submit</button>
 						</form>

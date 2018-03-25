@@ -22,7 +22,9 @@
     "pk": 1,
     "fields": {
       "role": 15,
-      "user": 1
+      "user": 1,
+      "origin":3,
+      "phone": "123"
     }
 }
 ]

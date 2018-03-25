@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
-from .models import Location, Informer, InformerOrigin, Division, Role, Member, Log, Complaint, Worker, ComplaintImages
+# from .models import Location, Informer, InformerOrigin, Division, Role, Member, Log, Complaint, Worker, ComplaintImages
+from .models import Location, Division, Role, Member, Log, Complaint, Worker, ComplaintImages
 
 
 class MemberInline(admin.StackedInline):
@@ -17,8 +18,8 @@ class NewUserAdmin(UserAdmin):
 admin.site.unregister(User)
 admin.site.register(User, NewUserAdmin)
 admin.site.register(Location)
-admin.site.register(InformerOrigin)
-admin.site.register(Informer)
+# admin.site.register(InformerOrigin)
+# admin.site.register(Informer)
 admin.site.register(Complaint)
 admin.site.register(Log)
 admin.site.register(Member)
