@@ -30,15 +30,23 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label class="control-label" for="nama">Nama</label>
-                    <p class="form-control" id="nama" disabled>{{complaint.informer.name}}</p>
+                    <p class="form-control" id="nama" disabled>{{complaint.member.user.first_name}} {{complaint.member.user.last_name}}</p>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="phone-number">Nomor telepon</label>
-                    <p class="form-control" id="phone-number" disabled>{{complaint.informer.phone_number}}</p>
+                    <p class="form-control" id="phone-number" disabled>{{complaint.member.phone}}</p>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="email">E-mail</label>
-                    <p class="form-control" id="email" disabled>{{complaint.informer.email}}</p>
+                    <p class="form-control" id="email" disabled>{{complaint.member.user.email}}</p>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label" for="origin">Kategori Sumber</label>
+                    <p class="form-control" id="email" disabled>{{complaint.member.origin}}</p>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label" for="role">Rincian</label>
+                    <p class="form-control" id="email" disabled>{{complaint.member.role}}</p>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="title">Judul Keluhan</label>

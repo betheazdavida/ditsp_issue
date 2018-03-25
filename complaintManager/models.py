@@ -22,7 +22,21 @@ class Location(models.Model):
     def __str__(self):
         return '{}: {},{}'.format(self.name, self.lat, self.lon)
 
-
+class Origin(models.Model):
+    MASTER_ORIGIN = (
+        ('Pimpinan', 'Pimpinan'),
+        ('Unit', 'Unit ITB'),
+        ('Intern', 'Intern Direktorat Sarana dan Prasarana'),
+        ('Civitas', 'Civitas Akademik'),
+        ('Eksternal', 'Eksternal ITB (Masyarakat, Tamu, dan Umum)')
+    )
+    name = models.CharField(max_length=20, choices=MASTER_ORIGIN)
+    def is_selected(self, name):
+        return 'selected' if name == self.name else ''
+    def __str__(self):
+        return dict(self.MASTER_ORIGIN)[self.name]
+    
+'''
 class InformerOrigin(models.Model):
     MASTER_ORIGIN = (
         ('Pimpinan', 'Pimpinan'),
@@ -39,6 +53,7 @@ class InformerOrigin(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.master_origin, self.specific_origin)
+      
 
 
 class Informer(models.Model):
@@ -49,7 +64,7 @@ class Informer(models.Model):
 
     def __str__(self):
         return '{} from {}'.format(self.name, self.origin)
-
+'''
 
 class Division(models.Model):
     DIVISIONS = (
@@ -68,6 +83,48 @@ class Division(models.Model):
     def __str__(self):
         return dict(self.DIVISIONS)[self.name]
 
+
+class Role(models.Model):
+    ROLES = (
+        ('PU', 'Perawatan Utilitas'),
+        ('PG', 'Perawatan Gedung'),
+        ('OG', 'Operasional dan Kebersihan Gedung'),
+        ('KS', 'Kebersihan dan Pengelolaan Sampah'),
+        ('IA', 'Inventarisasi Aset'),
+        ('PDA', 'Pendayagunaan Aset'),
+        ('PHA', 'Penghapusan Aset'),
+        ('PD', 'Penerimaan dan Distribusi'),
+        ('S', 'Sekretariat'),
+        ('D', 'Direktur'),
+        ('WD', 'Wakil Direktur'),
+        ('KAI', 'Kepala Subdit Pendayagunaan Aset dan Inventarisasi'),
+        ('KO', 'Kepala Subdit Operasional dan Kebersihan'),
+        ('KPA', 'Kepala Subdit Perawatan Aset'),
+        ('SA', 'Superadmin'),
+    )
+    name = models.CharField(max_length=10, choices=ROLES)
+    divisions = models.ManyToManyField(Division)
+
+    def __str__(self):
+        return dict(self.ROLES)[self.name]
+
+
+class Member(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    origin = models.ForeignKey(Origin,on_delete=models.CASCADE)
+    phone = models.CharField(max_length=20,default='')
+    def __str__(self):
+        return self.user.username
+
+    def isSuperadmin(self):
+        return self.role.name == 'SA'
+
+    def isLeaderOf(self, complaint):
+        return complaint.leader is None or complaint.leader in self.role.divisions.all()
+
+
+
 class Complaint(models.Model):
     STATUS = (
         ('S', 'Submitted'),
@@ -76,7 +133,7 @@ class Complaint(models.Model):
     )
     title = models.CharField(max_length=200)
     description = models.TextField(max_length=500)
-    informer = models.ForeignKey(Informer, on_delete=models.CASCADE)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
     location = models.OneToOneField(Location, on_delete=models.CASCADE)
     status = models.CharField(max_length=5, choices=STATUS,
                               null=False, blank=False, default='S')
@@ -128,45 +185,6 @@ class ComplaintImages(models.Model):
     log = models.ForeignKey(Log, blank=True, null=True, on_delete=models.PROTECT)
 
 
-class Role(models.Model):
-    ROLES = (
-        ('PU', 'Perawatan Utilitas'),
-        ('PG', 'Perawatan Gedung'),
-        ('OG', 'Operasional dan Kebersihan Gedung'),
-        ('KS', 'Kebersihan dan Pengelolaan Sampah'),
-        ('IA', 'Inventarisasi Aset'),
-        ('PDA', 'Pendayagunaan Aset'),
-        ('PHA', 'Penghapusan Aset'),
-        ('PD', 'Penerimaan dan Distribusi'),
-        ('S', 'Sekretariat'),
-        ('D', 'Direktur'),
-        ('WD', 'Wakil Direktur'),
-        ('KAI', 'Kepala Subdit Pendayagunaan Aset dan Inventarisasi'),
-        ('KO', 'Kepala Subdit Operasional dan Kebersihan'),
-        ('KPA', 'Kepala Subdit Perawatan Aset'),
-        ('SA', 'Superadmin'),
-    )
-    name = models.CharField(max_length=10, choices=ROLES)
-    divisions = models.ManyToManyField(Division)
-
-    def __str__(self):
-        return dict(self.ROLES)[self.name]
-
-
-class Member(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.username
-
-    def isSuperadmin(self):
-        return self.role.name == 'SA'
-
-    def isLeaderOf(self, complaint):
-        return complaint.leader is None or complaint.leader in self.role.divisions.all()
-
-
 class Worker(models.Model):
     name = models.CharField(max_length=50)
     division = models.ForeignKey(Division, on_delete=models.CASCADE)
@@ -179,7 +197,7 @@ class Worker(models.Model):
 class UserForm(ModelForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'password']
+        fields = ['first_name', 'last_name', 'email', 'password', 'username']
         widgets = {
             'username': TextInput(attrs={'class': 'form-control'}),
             'first_name': TextInput(attrs={'class': 'form-control'}),
@@ -197,7 +215,6 @@ class UserForm(ModelForm):
 
         return self.cleaned_data
 
-
 class UserEditForm(ModelForm):
     class Meta:
         model = User
@@ -212,9 +229,12 @@ class UserEditForm(ModelForm):
 class MemberForm(ModelForm):
     class Meta:
         model = Member
-        exclude = ['user']
+        fields = ['role','phone','origin']
+        exclude=['user']
         widgets = {
             'role': Select(attrs={'class': 'form-control'}),
+            'phone': TextInput(attrs={'class': 'form-control'}),
+            'origin': Select(attrs={'class':'form-control'}),
         }
 
 
@@ -237,9 +257,6 @@ class ComplaintCreateForm(ModelForm):
             'description': Textarea(
                 attrs={
                     'class': 'form-control'}),
-            'informer': TextInput(
-                attrs={
-                    'class': 'form-control'}),
             'leader': Select(
                 attrs={
                     'class': 'form-control'}),
@@ -260,7 +277,7 @@ class ComplaintCreateForm(ModelForm):
         return self.cleaned_data
 
 
-
+'''
 class ComplaintCreatePublicForm(ModelForm):
     class Meta:
         model = Complaint
@@ -287,7 +304,7 @@ class ComplaintCreatePublicForm(ModelForm):
                 attrs={
                     'class': 'form-control'}),
         }
-
+'''
 
 class ComplaintEditForm(ModelForm):
     class Meta:
@@ -313,9 +330,6 @@ class ComplaintEditForm(ModelForm):
                 attrs={
                     'style': 'margin-right: 10px'}),
             'description': Textarea(
-                attrs={
-                    'class': 'form-control'}),
-            'informer': TextInput(
                 attrs={
                     'class': 'form-control'}),
             'status': RadioSelect(
@@ -347,7 +361,7 @@ class ComplaintEditForm(ModelForm):
 
         return self.cleaned_data
 
-
+'''
 class InformerForm(ModelForm):
     class Meta:
         model = Informer
@@ -386,7 +400,7 @@ class InformerOriginForm(ModelForm):
             'master_origin': Select(attrs={'class': 'form-control'}),
             'specific_origin': TextInput(attrs={'class': 'form-control'})
         }
-
+'''
 
 class LocationForm(ModelForm):
     class Meta:

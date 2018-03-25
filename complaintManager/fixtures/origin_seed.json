@@ -1,0 +1,38 @@
+[
+    {
+      "model": "complaintManager.origin",
+      "pk": 1,
+      "fields": {
+        "name": "Pimpinan"
+      }
+    },
+    {
+      "model": "complaintManager.origin",
+      "pk": 2,
+      "fields": {
+        "name": "Unit"
+      }
+    },
+    {
+      "model": "complaintManager.origin",
+      "pk": 3,
+      "fields": {
+        "name": "Intern"
+      }
+    },
+    {
+      "model": "complaintManager.origin",
+      "pk": 4,
+      "fields": {
+        "name": "Civitas"
+      }
+    },
+    {
+      "model": "complaintManager.origin",
+      "pk": 5,
+      "fields": {
+        "name": "Eksternal"
+      }
+    }
+  ]
+  

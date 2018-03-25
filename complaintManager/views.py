@@ -144,26 +144,20 @@ def logout(request):
 @login_required
 def complaint_create(request):
     if request.method == 'POST':
-        informer_form = InformerForm(request.POST, prefix='informer')
         complaint_form = ComplaintCreateForm(request.POST, prefix='complaint')
         location_form = LocationForm(request.POST, prefix='location')
-        # print('pass')
-        if complaint_form.is_valid() and informer_form.is_valid() and location_form.is_valid():
-            print('pass')
-            informer = informer_form.save(commit=False)
-            informer.save()
+        if complaint_form.is_valid() and location_form.is_valid() :
             location_x = location_form.save(commit=False)
             location_x.save()
-
             complaint = complaint_form.save(commit=False)
             complaint.location = location_x
+            complaint.member = request.user.member
             complaint.status = 'S'
-            complaint.informer = informer
             complaint.is_public = False
             complaint.save()
             complaint_form.save_m2m()
             complaint.log_change(request.user, 'C', 'Keluhan berhasil dibuat.')
-            send_email(complaint, True)
+            # send_email(complaint, True)
 
             # Create images for current complaint
             for image in request.FILES.getlist('images'):
@@ -172,26 +166,27 @@ def complaint_create(request):
                 compImg.complaint = complaint
                 compImg.save()
 
-            informer_form = InformerForm(prefix='informer')
+            # informer_form = InformerForm(prefix='informer')
             complaint_form = ComplaintCreateForm(prefix='complaint')
             location_form = LocationForm(prefix='location')
             return redirect(
                 "%s?success_create=true" %
                 reverse('complaintManager:complaint_list'))
     else:
-        informer_form = InformerForm(prefix='informer')
+        # informer_form = InformerForm(prefix='informer')
         complaint_form = ComplaintCreateForm(prefix='complaint')
         location_form = LocationForm(prefix='location')
     template = 'complaintManager/complaint_create.html'
     return render(request,
                   template,
                   {'complaint_form': complaint_form,
-                   'informer_form': informer_form,
+                #    'informer_form': informer_form,
                    'location_form': location_form, })
 
 
 def complaint_create_public(request):
     if request.method == 'POST':
+        user_form = UserForm(request.POST, prefix='user')
         informer_form = InformerForm(request.POST, prefix='informer')
         complaint_form = ComplaintCreatePublicForm(
             request.POST, prefix='complaint')
