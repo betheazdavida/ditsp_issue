@@ -372,7 +372,7 @@ def complaint_list(request):
         accessible_complaints = Complaint.objects.filter(
             assigned_divisions__in=accessible_divisions
         ) | Complaint.objects.filter(
-            informer__email__iexact=request.user.email
+            member__user__email__iexact=request.user.email
         )
         accessible_complaints = accessible_complaints.distinct()
 
