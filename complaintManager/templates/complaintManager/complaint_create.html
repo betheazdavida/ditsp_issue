@@ -14,12 +14,12 @@
 						<form method="POST" action="{% url 'complaintManager:complaint_create' %}" enctype="multipart/form-data">
 							{% csrf_token %}
 							<div class="form-group">
-								<label class="control-label" for="informer">Nama Pelapor</label>
-								{{informer_form.name}}
+								<label class="control-label" for="informer">Nama Pelapor</label><br/>
+								{{ user.first_name }} {{user.last_name}}
 							</div>
 							<div class="form-group">
-								<label class="control-label" for="phone-number">Nomor Telepon</label>
-								{{informer_form.phone_number}}
+								<label class="control-label" for="phone-number">Nomor Telepon</label><br/>
+								{{user.member.phone}}
 								{% if informer_form.phone_number.errors %}
 										<ul class="error-list">
 										{% for error in informer_form.phone_number.errors %}
@@ -29,8 +29,8 @@
 								{% endif %}
 							</div>
 							<div class="form-group">
-								<label class="control-label" for="email">E-mail</label>
-								{{informer_form.email}}
+								<label class="control-label" for="email">E-mail</label><br/>
+								{{user.email}}
 								{% if informer_form.email.errors %}
 										<ul class="error-list">
 										{% for error in informer_form.email.errors %}
@@ -40,19 +40,21 @@
 								{% endif %}
 							</div>
 							<div class="form-group">
-								<label class="control-label" for="origin">Kategori Sumber</label>
-								<select class="form-control" id="id_master_origin" onchange="hideOriginOptions()">
+								<label class="control-label" for="origin">Kategori Sumber</label><br/>
+								{{user.member.origin}}
+								<!-- <select class="form-control" id="id_master_origin" onchange="hideOriginOptions()">
 									<option value="None" selected>---------</option>
 									<option value="Pimpinan">Pimpinan</option>
 									<option value="Unit">Unit ITB</option>
 									<option value="Intern">Intern Direktorat Sarana dan Prasarana</option>
 									<option value="Civitas">Civitas Akademik</option>
 									<option value="Eksternal">Eksternal ITB (Masyarakat, Tamu, dan Umum)</option>
-								</select>
+								</select> -->
 							</div>
 							<div class="form-group">
-								<label class="control-label" for="origin">Rincian Sumber</label>
-								{{informer_form.origin}}
+								<label class="control-label" for="origin">Rincian Sumber</label><br/>
+								<!-- {{informer_form.origin}} -->
+								{{user.member.role}}
 							</div>
 							<div class="form-group">
 								<label class="control-label" for="title">Subjek Keluhan</label>
