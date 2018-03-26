@@ -36,7 +36,7 @@ class Origin(models.Model):
     def __str__(self):
         return dict(self.MASTER_ORIGIN)[self.name]
     
-
+'''
 class InformerOrigin(models.Model):
     MASTER_ORIGIN = (
         ('Pimpinan', 'Pimpinan'),
@@ -53,6 +53,7 @@ class InformerOrigin(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.master_origin, self.specific_origin)
+      
 
 
 class Informer(models.Model):
@@ -63,7 +64,7 @@ class Informer(models.Model):
 
     def __str__(self):
         return '{} from {}'.format(self.name, self.origin)
-
+'''
 
 class Division(models.Model):
     DIVISIONS = (
@@ -276,7 +277,7 @@ class ComplaintCreateForm(ModelForm):
         return self.cleaned_data
 
 
-
+'''
 class ComplaintCreatePublicForm(ModelForm):
     class Meta:
         model = Complaint
@@ -303,7 +304,7 @@ class ComplaintCreatePublicForm(ModelForm):
                 attrs={
                     'class': 'form-control'}),
         }
-
+'''
 
 class ComplaintEditForm(ModelForm):
     class Meta:
@@ -329,9 +330,6 @@ class ComplaintEditForm(ModelForm):
                 attrs={
                     'style': 'margin-right: 10px'}),
             'description': Textarea(
-                attrs={
-                    'class': 'form-control'}),
-            'informer': TextInput(
                 attrs={
                     'class': 'form-control'}),
             'status': RadioSelect(
@@ -363,7 +361,7 @@ class ComplaintEditForm(ModelForm):
 
         return self.cleaned_data
 
-
+'''
 class InformerForm(ModelForm):
     class Meta:
         model = Informer
@@ -402,7 +400,7 @@ class InformerOriginForm(ModelForm):
             'master_origin': Select(attrs={'class': 'form-control'}),
             'specific_origin': TextInput(attrs={'class': 'form-control'})
         }
-
+'''
 
 class LocationForm(ModelForm):
     class Meta:
