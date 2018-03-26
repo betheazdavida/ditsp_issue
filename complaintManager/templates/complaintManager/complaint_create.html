@@ -63,19 +63,40 @@
 								{{location_form.name}}
 							</div>
 							<div class="form-group">
-								<label class="control-label" for="assigned_divisions">Jenis Keluhan</label>
-								{{complaint_form.assigned_divisions}}
+								<label class="control-label" for="assigned_divisions">Jenis Keluhan</label><br>
+								<input type="checkbox" name="select_divisions" value="PU" onclick="changeVisibility('PU')">Perawatan Utilitas<br>
+								<input type="checkbox" name="select_divisions" value="PG" onclick="changeVisibility('PG')">Perawatan Gedung<br>
+								<input type="checkbox" name="select_divisions" value="OG" onclick="changeVisibility('OG')">Operasional dan Kebersihan Gedung<br>
+								<input type="checkbox" name="select_divisions" value="KS" onclick="changeVisibility('KS')">Kebersihan dan Pengelolaan Sampah<br>
+								<input type="checkbox" name="select_divisions" value="IA" onclick="changeVisibility('IA')">Inventarisasi Aset<br>
+								<input type="checkbox" name="select_divisions" value="PDA" onclick="changeVisibility('PDA')">Pendayagunaan Aset<br>
+								<input type="checkbox" name="select_divisions" value="PHA" onclick="changeVisibility('PHA')">Penghapusan Aset<br>
+								<input type="checkbox" name="select_divisions" value="PD" onclick="changeVisibility('PD')">Penerimaan dan Distribusi<br>
+								<input type="checkbox" name="select_divisions" value="S" onclick="changeVisibility('S')">Sekretariat<br>
+								<!-- {{complaint_form.assigned_divisions}} -->
 							</div>
 							<div class="form-group">
 								<label class="control-label" for="leader">Divisi Leader Keluhan</label>
-								{{complaint_form.leader}}
+								<select class="form-control">
+									<option value="None" selected>---------</option>
+									<option value="PU" id="PU" style="display: none;">Perawatan Utilitas</option>
+									<option value="PG" id="PG" style="display: none;">Perawatan Gedung</option>
+									<option value="OG" id="OG" style="display: none;">Operasional dan Kebersihan Gedung</option>
+									<option value="KS" id="KS" style="display: none;">Kebersihan dan Pengelolaan Sampah</option>
+									<option value="IA" id="IA" style="display: none;">Inventarisasi Aset</option>
+									<option value="PDA" id="PDA" style="display: none;">Pendayagunaan Aset</option>
+									<option value="PHA" id="PHA" style="display: none;">Penghapusan Aset</option>
+									<option value="PD" id="PD" style="display: none;">Penerimaan dan Distribusi</option>
+									<option value="S" id="S" style="display: none;">Sekretariat</option>
+								</select>
+								<!-- {{complaint_form.leader}}
 								{% if complaint_form.leader.errors %}
 										<ul class="error-list">
 										{% for error in complaint_form.leader.errors %}
 												<li style="color: red;">{{ error|escape }}</li>
 										{% endfor %}
 										</ul>
-								{% endif %}
+								{% endif %} -->
 							</div>
 							<div class="form-group">
 								<label class="control-label" for="description">Keluhan</label>
@@ -121,6 +142,19 @@
 	}
 
 	hideOriginOptions('None');
+</script>
+<script type="text\javascript"></script>
+<script>
+	function changeVisibility(optionName) {
+		console.log(optionName);
+		if (document.getElementById(optionName).style.display == "none") {
+			document.getElementById(optionName).style.display = "block";
+			console.log("Changed to visible");
+		} else if (document.getElementById(optionName).style.display == "block") {
+			document.getElementById(optionName).style.display = "none";
+			console.log("Changed to none");
+		}
+	}
 </script>
 <script>
 	function initMap() {
