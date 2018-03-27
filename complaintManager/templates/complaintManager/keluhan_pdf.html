@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <title>Laporan Keluhan</title>
+        <style type="text/css">
+            @page {
+                size: A4;
+                margin: 1cm;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <table class="table table-condensed table-hover summary-report" border="1px">
+              <tbody id="summary_report">
+                <tr>
+                  <th>Tanggal</th>
+                  <th>Deskripsi</th>
+                  <th>Status</th>
+                  <th>Divisi Yang Mengerjakan</th>
+                  <th>Prioritas</th>
+                  <th>Pemberi Keluhan</th>
+                </tr>
+                {% for complaint in complaints %}
+                <tr>
+                  <td class="date-time">
+                    <i class="fa fa-calendar"></i> {{ complaint.reported | date:"j M Y - G.i" }}
+                  </td>
+                  <td class="contact-note">
+                    <strong>{{ complaint.description }}</strong>
+                  </td>
+                  <td class="contact-note">
+                    <strong>{{ complaint.status }}</strong>
+                  </td>
+                  <td class="contact-note">
+                    <strong>{% for division in complaint.assigned_divisions.all %}
+                      {{ division.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}</strong>
+                  </td>
+                  <td class="contact-note">
+                    <strong>{{ complaint.priority }}</strong>
+                  </td>
+                  <td class="contact-note">
+                    <strong>{{ complaint.informer.name }}</strong>
+                  </td>
+                </tr>
+                {% endfor %}
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if complaints.has_previous %}
+                            <a href="?page={{ complaints.previous_page_number }}"><i class="fa fa-arrow-left"></i> Prev</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Page {{ complaints.number }} of {{ complaints.paginator.num_pages }}
+                        </span>
+
+                        {% if complaints.has_next %}
+                            <a href="?page={{ complaints.next_page_number }}">Next <i class="fa fa-arrow-right"></i></a>
+                        {% endif %}
+                    </span>
+                </div>
+              </tbody>
+            </table>
+        </div>
+    </body>
+</html>

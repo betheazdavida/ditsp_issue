@@ -8,12 +8,22 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.views import generic
 from django.db.models import Q
+from xhtml2pdf import pisa
+from django.template.loader import render_to_string
+from django.template.loader import get_template
+from django.template import Context
+from cgi import escape
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import BytesIO
 from .utils import *
 from .models import *
 import csv
 from django.http import HttpResponse
 import datetime
 import json
+import sys
 
 # Create your views here.
 
@@ -66,6 +76,23 @@ def index(request):
         'graph_json': json.dumps(graphdata)
     })
 
+def render_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    context = Context(context_dict)
+    #html  = template.render(context)
+    html = render_to_string(
+        'complaintManager/keluhan_pdf.html', {
+            'complaints': context_dict.get('complaints')
+        }
+    )
+    result = BytesIO()
+
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        resp = HttpResponse(result.getvalue(), content_type='application/octet-stream')
+        resp['Content-Disposition'] = 'attachment; filename = "Laporan Keluhan.pdf"'
+        return resp
+    return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
 
 def laporan(request):
     #cdate = datetime.date.today().replace(day=1)
@@ -78,40 +105,44 @@ def laporan(request):
         start_date = request.GET['start_date']
         end_date = request.GET['end_date']
         last_complaints = Complaint.objects.filter(reported__range=(start_date, end_date))
+        if request.GET['type'] == 'csv':
+            # make the csv file
+            filename = 'laporan_detail.csv'
+            with open(filename, 'w', newline='') as csvfile:
+                writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                #Create field name
+                writer.writerow(['Tanggal', 'Deskripsi', 'Status', 'Divisi Yang Mengerjakan',
+                    'Prioritas', 'Pemberi Keluhan'])
 
-        # make the csv file
-        filename = 'laporan_detail.csv'
-        with open(filename, 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-            #Create field name
-            writer.writerow(['Tanggal', 'Deskripsi', 'Status', 'Divisi Yang Mengerjakan',
-                'Prioritas', 'Pemberi Keluhan', 'Asal Instansi Pelapor',
-                'Asal Pelapor (Spesifik)'])
-
-            # Mulai mengisi file
-            list = []
-            for complaint in last_complaints:
-                list.append(complaint.reported.replace(microsecond=0))
-                list.append(complaint.description)
-                list.append(complaint.status)
-                divisi_list = []
-                for division in complaint.assigned_divisions.all():
-                    divisi_list.append(division.name)
-                divisi_string = ",".join(divisi_list)
-                list.append(divisi_string)
-                list.append(complaint.priority)
-                list.append(complaint.member.user.first_name)
-                list.append(complaint.member.origin.name)
-                list.append(complaint.member.role.name)
-                writer.writerow(list)
+                # Mulai mengisi file
                 list = []
+                for complaint in last_complaints:
+                    list.append(complaint.reported.replace(microsecond=0))
+                    list.append(complaint.description)
+                    list.append(complaint.status)
+                    divisi_list = []
+                    for division in complaint.assigned_divisions.all():
+                        divisi_list.append(division.name)
+                    divisi_string = ",".join(divisi_list)
+                    list.append(divisi_string)
+                    list.append(complaint.priority)
+                    list.append(complaint.informer.name)
+                    writer.writerow(list)
+                    list = []
 
-        download_dir = os.path.join(filename)
-        return download(request, download_dir)
+            download_dir = os.path.join(filename)
+            return download(request, download_dir)
+        else:
+            return render_to_pdf(
+                'complaintManager/keluhan_pdf.html',dict(
+                {
+                    'pagesize': 'A4',
+                    'complaints': last_complaints,
+                })
+            )
     else:
         template = 'complaintManager/index.html'
         return render(request, template)
-
 
 def login(request):
     if request.user.is_authenticated:
