@@ -76,7 +76,7 @@ class Division(models.Model):
         ('PDA', 'Pendayagunaan Aset'),
         ('PHA', 'Penghapusan Aset'),
         ('PD', 'Penerimaan dan Distribusi'),
-        ('S', 'Sekretariat'),
+        ('S', 'Sekretariat'),  
     )
     name = models.CharField(max_length=10, choices=DIVISIONS)
 
