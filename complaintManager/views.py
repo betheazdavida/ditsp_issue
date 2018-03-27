@@ -112,7 +112,8 @@ def laporan(request):
                 writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
                 #Create field name
                 writer.writerow(['Tanggal', 'Deskripsi', 'Status', 'Divisi Yang Mengerjakan',
-                    'Prioritas', 'Pemberi Keluhan'])
+                    'Prioritas', 'Pemberi Keluhan', 'Asal Instansi Pelapor',
+                    'Asal Pelapor (Spesifik)'])
 
                 # Mulai mengisi file
                 list = []
@@ -126,7 +127,9 @@ def laporan(request):
                     divisi_string = ",".join(divisi_list)
                     list.append(divisi_string)
                     list.append(complaint.priority)
-                    list.append(complaint.informer.name)
+                    list.append(complaint.member.user.first_name)
+                    list.append(complaint.member.origin.name)
+                    list.append(complaint.member.role.name)
                     writer.writerow(list)
                     list = []
 
