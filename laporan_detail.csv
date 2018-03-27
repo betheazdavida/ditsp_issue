@@ -1,5 +1,6 @@
-Tanggal,Deskripsi,Status,Divisi Yang Mengerjakan,Prioritas,Pemberi Keluhan
-2018-02-23 12:24:07+00:00,Lampunya mati,F,"PU,PG",1,Bethea
-2018-02-24 14:16:25+00:00,Gedungnya bolong-bolong,S,PG,1,Azis
-2018-02-28 10:37:11+00:00,Gedungnya rubuh bagian depan,S,PG,1,Arno
-2018-02-28 10:43:19+00:00,Atap di labtek VII bocor titiktitik,S,"PG,OG",1,William
+Tanggal,Deskripsi,Status,Divisi Yang Mengerjakan,Prioritas,Pemberi Keluhan,Asal Instansi Pelapor,Asal Pelapor (Spesifik)
+2018-03-18 03:31:29+00:00,aaaaa,S,PU,1,Sumiatun,Intern,SA
+2018-03-18 03:32:19+00:00,aaaaa,S,PU,1,Sumiatun,Intern,SA
+2018-03-18 03:32:37+00:00,asasas,S,"PU,PG",1,Sumiatun,Intern,SA
+2018-03-18 03:32:38+00:00,asasas,S,"PU,PG",1,Sumiatun,Intern,SA
+2018-03-18 06:08:31+00:00,aaa,S,KS,1,Sumiatun,Intern,SA

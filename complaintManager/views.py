@@ -100,9 +100,9 @@ def laporan(request):
                 divisi_string = ",".join(divisi_list)
                 list.append(divisi_string)
                 list.append(complaint.priority)
-                list.append(complaint.informer.name)
-                list.append(complaint.informer.origin.master_origin)
-                list.append(complaint.informer.origin.specific_origin)
+                list.append(complaint.member.user.first_name)
+                list.append(complaint.member.origin.name)
+                list.append(complaint.member.role.name)
                 writer.writerow(list)
                 list = []
 
