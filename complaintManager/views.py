@@ -405,10 +405,7 @@ def complaint_list(request):
         accessible_divisions = request.user.member.role.divisions.all()
         accessible_complaints = Complaint.objects.filter(
             assigned_divisions__in=accessible_divisions
-        ) | Complaint.objects.filter(
-            member__user__email__iexact=request.user.email
         )
-        accessible_complaints = accessible_complaints.distinct()
 
     complaints_unpaginated = accessible_complaints.exclude(
         assigned_divisions=None
@@ -462,7 +459,85 @@ def complaint_list(request):
     return render(
         request, template, {
             'complaints': complaints,
-            'title': 'Daftar Keluhan',
+            'title': 'Daftar Keluhan Masuk',
+            'success_edit': success_edit,
+            'success_create': success_create,
+            'search_query' : search_query,
+            'list_state': {
+                'filter': desired_filter,
+                'sort': desired_order
+            },
+        })
+
+@login_required
+def complaint_list_out(request):
+    # Success message
+    success_edit = False
+    success_create = False
+    if request.GET.get('success_edit'):
+        success_edit = True
+    if request.GET.get('success_create'):
+        success_create = True
+
+    # Authorized roles
+    accessible_divisions = request.user.member.role.divisions.all()
+    accessible_complaints = Complaint.objects.filter(
+        member__user__email__iexact=request.user.email
+    )
+
+    complaints_unpaginated = accessible_complaints.exclude(
+        assigned_divisions=None
+    )
+
+    orderings = {
+        'none': '-reported',  # The default is to order by report time
+        'reported': '-reported',  # Default may change one day
+        'title': 'title',
+    }
+
+    filters = {
+        'done': Q(status='F'),
+        'progress': Q(status='P'),
+        'new': Q(status='S'),
+    }
+
+    search_query = request.GET.get('search')
+    if search_query :
+        complaints_unpaginated = complaints_unpaginated.filter(
+            Q(title__icontains=search_query)
+            | Q(informer__name__icontains=search_query)
+        )
+
+    desired_order = request.GET.get('sort', 'none')
+    desired_filter = request.GET.getlist('filter', ['done', 'progress', 'new'])
+
+    filter_qs = [filters[f] for f in desired_filter]
+    filter_q = filter_qs[0]
+    for q in filter_qs[1:]:
+        filter_q = filter_q | q
+
+    complaints_unpaginated = (
+        complaints_unpaginated.order_by(orderings[desired_order])
+                              .filter(filter_q)
+    )
+
+    paginator = Paginator(complaints_unpaginated, 10)
+
+    page = request.GET.get('page')
+    try:
+        complaints = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        complaints = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        complaints = paginator.page(paginator.num_pages)
+
+    template = 'complaintManager/list-keluhan.html'
+    return render(
+        request, template, {
+            'complaints': complaints,
+            'title': 'Daftar Keluhan Keluar',
             'success_edit': success_edit,
             'success_create': success_create,
             'search_query' : search_query,
