@@ -1,9 +1,45 @@
-{% extends "complaintManager/base.html" %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Manajemen Keluhan</title>
+  <link rel="shortcut icon" href="{% static 'complaintManager/img/logo-itb.png' %}" />
+
+  <!-- Bootstrap Core CSS -->
+  <link href="{% static 'complaintManager/css/bootstrap.min.css' %}" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'complaintManager/css/main.css' %}">
+
+  <!-- Custom Fonts -->
+  <link href="{% static 'complaintManager/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Raleway:500,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans" rel="stylesheet">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+
+
 {% load staticfiles %}
 {% load complaint_extras %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'complaintManager/css/status-keluhan.css' %}">
+<link href="{% static 'complaintManager/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Raleway:500,700" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Merriweather+Sans" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -14,13 +50,6 @@
           <div class= "panel-heading">
             <h3>
               Informasi Keluhan
-              {% if user.member.isSuperadmin %}
-              <small>
-                <a href="{% url 'complaintManager:complaint_edit' complaint.id %}" class="btn btn-warning">
-                  Edit
-                </a>
-              </small>
-              {% endif %}
             </h3>
             <hr>
           </div>
@@ -30,41 +59,41 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label class="control-label" for="nama">Nama</label>
-                    <p class="form-control" id="nama" disabled>{{complaint.member.user.first_name}} {{complaint.member.user.last_name}}</p>
+                    <div id="nama">{{complaint.member.user.first_name}} {{complaint.member.user.last_name}}</div>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="phone-number">Nomor telepon</label>
-                    <p class="form-control" id="phone-number" disabled>{{complaint.member.phone}}</p>
+                    <div id="phone-number">{{complaint.member.phone}}</div>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="email">E-mail</label>
-                    <p class="form-control" id="email" disabled>{{complaint.member.user.email}}</p>
+                    <div id="email">{{complaint.member.user.email}}</div>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="origin">Kategori Sumber</label>
-                    <p class="form-control" id="email" disabled>{{complaint.member.origin}}</p>
+                    <div id="email">{{complaint.member.origin}}</div>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="role">Rincian</label>
-                    <p class="form-control" id="email" disabled>{{complaint.member.role}}</p>
+                    <div id="email">{{complaint.member.role}}</div>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="title">Judul Keluhan</label>
-                    <p class="form-control" id="taitle" disabled>{{complaint.title}}</p>
+                    <div id="taitle">{{complaint.title}}</div>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="complaint-type">Jenis Keluhan</label>
-                    <p class="form-control" id="sel1" disabled>{% for division in complaint.assigned_divisions.all %}
+                    <div id="sel1">{% for division in complaint.assigned_divisions.all %}
                       {{ division.name }}{% if not forloop.last %}, {% endif %}
-                    {% endfor %}</p>
+                    {% endfor %}</div>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="complaints">Keluhan</label>
-                    <textarea class="form-control" rows="12" id="complaints" disabled>{{complaint.description}}</textarea>
+                    <div id="complaints">{{complaint.description}}</div>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="complaint-type">Leader</label>
-                    <p class="form-control" id="sel1" disabled>{{complaint.leader.name}}</p>
+                    <div id="sel1">{{complaint.leader.name}}</div>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -81,7 +110,6 @@
                     <li class="list-group-item">{{worker.name}} - {{worker.division}}</li>
                     {% endfor %}
                   </ul>
-                  <!-- <p class="form-control-static" id="dikerjakan" disabled>Petugas PLN</p> -->
                 </div>
                 <div class="form-group">
                   <label for="media">Media:</label>
@@ -365,6 +393,15 @@
 </div>
 
 {% endblock %}
+
+
+<!-- jQuery -->
+<script src="{% static 'complaintManager/js/jquery.js' %}"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="{% static 'complaintManager/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'complaintManager/js/highcharts.js' %}"></script>
+<script src="{% static 'complaintManager/js/exporting.js' %}"></script>
 
 {% block script %}
 <script>
