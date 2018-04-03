@@ -31,7 +31,7 @@
   <div class="panel-heading">
     <div class="row">
            <div class="col-md-4">
-             <h4 clas="panel-title">{{ title }}</h3>
+             <h4 clas="panel-title">{{ title }}</h4>
            </div>
        </div>
   </div>
@@ -104,7 +104,7 @@
             </td>
           <td>
             <a href="{% url 'complaintManager:complaint_status' complaint.id %}" class="btn btn-primary">Detail</a>
-            <a href=# class="btn btn-success">Download</a>
+            <a href="{% url 'complaintManager:complaint_download' complaint.id %}" class="btn btn-success">Download</a>
             {% if user.member.role.name == 'SA' %}
             <a href="{% url 'complaintManager:complaint_edit' complaint.id %}" class="btn btn-warning">Edit</a>
             <button type="button" class="btn btn-danger" id="delete-keluhan"
