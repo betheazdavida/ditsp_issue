@@ -114,6 +114,7 @@ class Member(models.Model):
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
     origin = models.ForeignKey(Origin,on_delete=models.CASCADE)
     phone = models.CharField(max_length=20,default='')
+    additional_division = models.ManyToManyField(Division)
     def __str__(self):
         return self.user.username
 
@@ -226,16 +227,31 @@ class UserEditForm(ModelForm):
             'email': TextInput(attrs={'class': 'form-control'}),
         }
 
-class MemberForm(ModelForm):
+class MemberEditForm(ModelForm):
     class Meta:
         model = Member
-        fields = ['role','phone','origin']
+        fields = ['role','origin','additional_division','phone']
         exclude=['user']
         widgets = {
-            'role': Select(attrs={'class': 'form-control'}),
             'phone': TextInput(attrs={'class': 'form-control'}),
             'origin': Select(attrs={'class':'form-control'}),
+            'role': Select(attrs={'class': 'form-control'}),
+            'additional_division': CheckboxSelectMultiple(
+                choices=Division.objects.filter(name='OG'),
+                attrs={
+                    'style': 'margin-right: 10px'}),
         }
+
+class MemberCreateForm(ModelForm):
+    class Meta:
+        model = Member
+        fields = ['role','origin','phone']
+        exclude=['user']
+        widgets = {
+            'phone': TextInput(attrs={'class': 'form-control'}),
+            'origin': Select(attrs={'class':'form-control'}),
+            'role': Select(attrs={'class': 'form-control'}),
+        }      
 
 
 class ComplaintCreateForm(ModelForm):

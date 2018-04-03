@@ -330,33 +330,32 @@ def user_index(request):
 @login_required
 def user_edit(request, pk):
     user = get_object_or_404(User, pk=pk)
+    organogram_divisions = user.member.role.divisions.all()
     if request.method == 'POST':
         user_form = UserEditForm(request.POST, prefix='user', instance=user)
-        member_form = MemberForm(
-            request.POST,
-            prefix='member',
-            instance=user.member)
-        if user_form.is_valid() and member_form.is_valid():
+        member_form = MemberEditForm(request.POST,prefix='member',instance=user.member)
+        if member_form.is_valid() and user_form.is_valid():
             user.save()
-            member = member_form.save(commit=False)
+            member = member_form.save()
             member.user = user
             member.save()
             messages.success(request, 'Pengguna "' + user.username + '" berhasil disunting')
             return redirect('complaintManager:user_index')
     else:
         user_form = UserEditForm(prefix='user', instance=user)
-        member_form = MemberForm(prefix='member', instance=user.member)
+        member_form = MemberEditForm(prefix='member', instance=user.member)
     template = 'complaintManager/user_edit.html'
     return render(
         request, template, {
-            'pk': pk, 'user_form': user_form, 'member_form': member_form})
+            'pk': pk, 'member_form':member_form, 'user_form': user_form,'organogram_divisions':organogram_divisions})
 
 
 @login_required
 def user_create(request):
+    
     if request.method == 'POST':
         user_form = UserForm(request.POST, prefix='user')
-        member_form = MemberForm(request.POST, prefix='member')
+        member_form = MemberCreateForm(request.POST, prefix='member')
         if user_form.is_valid() and member_form.is_valid():
             user = user_form.save(commit=False)
             user.set_password(request.POST['user-password'])
@@ -367,12 +366,13 @@ def user_create(request):
             messages.success(request, 'Pengguna "' + user.username + '" berhasil dibuat')
             return redirect('complaintManager:user_index')
     else:
+        
         user_form = UserForm(prefix='user')
-        member_form = MemberForm(prefix='member')
+        member_form = MemberCreateForm(prefix='member')
     template = 'complaintManager/user_create.html'
     return render(
         request, template, {
-            'user_form': user_form, 'member_form': member_form})
+            'user_form': user_form, 'member_form': member_form })
 
 @login_required
 def user_delete(request, pk):
@@ -402,7 +402,9 @@ def complaint_list(request):
     if request.user.member.isSuperadmin():
         accessible_complaints = Complaint.objects.all()
     else:
-        accessible_divisions = request.user.member.role.divisions.all()
+        organogram_divisions = request.user.member.role.divisions.all()
+        additional_divisions = request.user.member.additional_division.all()
+        accessible_divisions = organogram_divisions | additional_divisions
         accessible_complaints = Complaint.objects.filter(
             assigned_divisions__in=accessible_divisions
         ) | Complaint.objects.filter(
