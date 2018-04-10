@@ -45,14 +45,13 @@
             </a>
             <style type="text/css">
               #logo-itb {
-                margin-top: 10px;
+                margin-top: 20px;
                 margin-bottom: 10px;
               }
             </style>
             {% if user.is_authenticated %}
-            <!-- Tolong ganti ini butut -->
-            <div class="user-profile text-left" style="color: white; padding: 0 1rem;">
-              <h6 id="title">Welcome, {{ user.username }}!</h5>
+            <div class="user-profile text-left" style="margin-top:40px;margin-left:20px;color: white;background-color: rgba(128, 191, 255,0.5);width: 180px;padding: 25px;text-align:center;border-radius: 25px;">
+              <h6 id="title">{{ user.username }}</h5>
               <h6 id="title">{{ user.member.role }}</h5>
             </div>
             {% endif %}
