@@ -266,30 +266,56 @@ def complaint_create_public(request):
 @login_required
 def complaint_edit(request, pk):
     complaint = get_object_or_404(Complaint, pk=pk)
+    old_complaint = complaint
     complaint_was_finished = complaint.status == 'F'
     if request.method == 'POST':
         complaint_form = ComplaintEditForm(
             request.POST, prefix='complaint', instance=complaint)
+        new_complaint = get_object_or_404(Complaint, pk=pk)
         print(complaint_form['title'])
         if complaint_form.is_valid():
             complaint = complaint_form.save(commit=False)
             complaint.save()
             complaint_form.save_m2m()
-            complaint.log_change(
-                request.user, 'AC', 'Keluhan diubah oleh admin.')
+            if old_complaint.title != new_complaint.title:
+                old = old_complaint.title
+                new = new_complaint.title
+                change = "Judul"
+            if old_complaint.assigned_divisions != new_complaint.assigned_divisions:
+                old = old_complaint.assigned_divisions
+                new = new_complaint.assigned_divisions
+                change = "Jenis"
+            if old_complaint.leader != new_complaint.leader:
+                old = old_complaint.leader
+                new = new_complaint.leader
+                change = "Divisi"
+            if old_complaint.description != new_complaint.description:
+                old = old_complaint.description
+                new = new_complaint.description
+                change = "Deskripsi"
+            if old_complaint.priority != new_complaint.priority:
+                old = old_complaint.priority
+                new = new_complaint.priority
+                change = "Prioritas"
+            if old_complaint.reported != new_complaint.reported:
+                old = old_complaint.reported
+                new = new_complaint.reported
+                change = "Waktu"
+            if old_complaint.status == new_complaint.status:
+                complaint.log_change(request.user, 'AC', change + ' diubah dari "' + old + '" menjadi "' + new + '" oleh '+ request.user.username)
 
             if complaint_was_finished and complaint.status != 'F':
                 complaint.log_change(
                     request.user,
                     'ACRMD',
-                    'Status keluhan diubah menjadi belum selesai.')
+                    'Status keluhan diubah menjadi belum selesai oleh ' + request.user.username)
             elif not complaint_was_finished and complaint.status == 'F':
                 complaint.log_change(
-                    request.user, 'MD', 'Status keluhan diubah menjadi sudah selesai.')
+                    request.user, 'MD', 'Status keluhan diubah menjadi sudah selesai oleh ' + request.user.username)
             if complaint.assigned_divisions.count(
             ) > 0 and complaint.log_set.filter(kind='C').count() == 0:
                 complaint.log_change(
-                    request.user, 'C', 'Keluhan diassign ke divisi.')
+                    request.user, 'C', 'Keluhan diassign ke divisi oleh  ' + request.user.username)
             return redirect(
                 "%s?success_edit=true" %
                 reverse('complaintManager:complaint_list'))
