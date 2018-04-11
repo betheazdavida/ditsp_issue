@@ -262,6 +262,28 @@ def complaint_create_public(request):
                    'informer_form': informer_form,
                    'location_form': location_form, })
 
+@login_required
+def complaint_download(request, pk):
+    complaint = get_object_or_404(Complaint, pk=pk)
+    return download_to_pdf(
+        'complaintManager/complaint_print.html', dict(
+            {
+                'pagesize': 'A4',
+                'complaint': complaint,
+            })
+    )
+
+def download_to_pdf(template_src, context_dict):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = BytesIO()
+
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        resp = HttpResponse(result.getvalue(), content_type='application/octet-stream')
+        resp['Content-Disposition'] = 'attachment; filename = "Laporan Keluhan.pdf"'
+        return resp
+    return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
 
 @login_required
 def complaint_edit(request, pk):

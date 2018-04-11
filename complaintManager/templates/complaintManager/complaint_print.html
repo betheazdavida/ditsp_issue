@@ -1,0 +1,299 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style type="text/css">
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+    </style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Manajemen Keluhan</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'complaintManager/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'complaintManager/css/main.css' %}">
+
+    <!-- Custom Fonts -->
+    <link href="{% static 'complaintManager/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+</head>
+    <link rel="stylesheet" href="{% static 'complaintManager/css/status-keluhan.css' %}">
+    <link href="{% static 'complaintManager/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans" rel="stylesheet">
+
+    <div class="page-content-container">
+        <div class="row">
+            <div class="col-xs-12" id="info-keluhan">
+                <div class="panel panel-default-borderless">
+                    <div class="panel-heading">
+                        <h3>
+                            Informasi Keluhan
+                        </h3>
+                        <hr>
+                    </div>
+                    <div class="panel-body" id="keluhan-content">
+                        <div class="row">
+                            <form>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label" for="nama">Nama</label>
+                                        <div id="nama">{{ complaint.member.user.first_name }} {{ complaint.member.user.last_name }}</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="phone-number">Nomor telepon</label>
+                                        <div id="phone-number">{{ complaint.member.phone }}</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="email">E-mail</label>
+                                        <div id="email">{{ complaint.member.user.email }}</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="origin">Kategori Sumber</label>
+                                        <div id="email">{{ complaint.member.origin }}</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="role">Rincian</label>
+                                        <div id="email">{{ complaint.member.role }}</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="title">Judul Keluhan</label>
+                                        <div id="taitle">{{ complaint.title }}</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="complaint-type">Jenis Keluhan</label>
+                                        <div id="sel1">{% for division in complaint.assigned_divisions.all %}
+                                            {{ division.name }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="complaints">Keluhan</label>
+                                        <div id="complaints">{{ complaint.description }}</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label" for="complaint-type">Leader</label>
+                                        <div id="sel1">{{ complaint.leader.name }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4>Lokasi Kejadian: {{ complaint.location.name }}</h4>
+                                    <div id="map" style="height:500px; width:100%;"></div>
+                                </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <!-- tambahin di DB -->
+                                <label for="dikerjakan">Dikerjakan Oleh:</label>
+                                <ul class="list-group" id="unit-kerja">
+                                    {% for worker in complaint.worker_set.all %}
+                                        <li class="list-group-item">{{ worker.name }} - {{ worker.division }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="form-group">
+                                <label for="media">Media:</label>
+                                <div class="row">
+                                    {% for image in complaint.complaintimages_set.all %}
+                                        {% if not image.log %}
+                                            <div class="col-md-4">
+                                                <img src="{{ MEDIA_URL }}/{{ image.src }}" class="img-responsive">
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="log">Log Perubahan:</label>
+                                <!-- <p class="form-control-static" id="log" disabled> -->
+                                <ul class="list-group" id="unit-kerja">
+                                    {% for log in complaint.log_set.all %}
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col-md-9">
+                                                    <p>
+                                                        {{ log.date }} : {{ log.description }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div align="right">
+                                                        <button class="btn btn-info" type="button" data-toggle="modal"
+                                                                data-target="#editlog" onclick="changeID({{ log.pk }})">
+                                                            <div class="glyphicon glyphicon-pencil"></div>
+                                                        </button>
+                                                        <button class="btn btn-info" type="button" data-toggle="modal"
+                                                                data-target="#imagelog"
+                                                                onclick="changeID({{ log.pk }})">
+                                                            <div class="glyphicon glyphicon-camera"></div>
+                                                        </button>
+                                                        <button class="btn btn-danger" type="button" data-toggle="modal"
+                                                                data-target="#deletelog"
+                                                                onclick="changeID({{ log.pk }})">
+                                                            <div class="glyphicon glyphicon-trash"></div>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                {% for image in log.complaintimages_set.all %}
+                                                    <div class="col-md-4">
+                                                        <img src="{{ MEDIA_URL }}/{{ image.src }}"
+                                                             class="img-responsive">
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+
+
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="status">Status: </label>
+                                {% if complaint.status == 'S' %}
+                                    <div> Submitted </div>
+                                {% elif complaint.status == 'P' %}
+                                    <div> On Progress </div>
+                                {% elif complaint.status == 'F' %}
+                                    <div> Finished </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- jQuery -->
+<script src="{% static 'complaintManager/js/jquery.js' %}"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="{% static 'complaintManager/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'complaintManager/js/highcharts.js' %}"></script>
+<script src="{% static 'complaintManager/js/exporting.js' %}"></script>
+
+{% block script %}
+    <script>
+        function submitWorker() {
+            document.getElementById("form-add-worker").submit();
+        }
+
+        function submitLog() {
+            document.getElementById("form-add-log").submit();
+        }
+
+        function deletelog() {
+            document.getElementById("form-delete-log").submit();
+        }
+
+        function editlog() {
+            document.getElementById("form-update-log").submit();
+        }
+
+        function changeID(id) {
+            document.getElementById("editValue").value = id;
+            document.getElementById("deleteValue").value = id;
+            document.getElementById("imageValue").value = id;
+        }
+    </script>
+
+    <script>
+        function initMap() {
+            var lokasi = {lat: {{complaint.location.lat}}, lng: {{complaint.location.lon}}};
+            console.log("loc : " + lokasi.lat + " " + lokasi.lng);
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 17,
+                center: lokasi
+            });
+            setMarkers(map);
+        }
+
+        var locations = [
+            // ['Labtek 6', -6.890146, 107.609810, 1], //labtek 6
+
+            ['{{complaint.location.name}}', {{complaint.location.lat}}, {{complaint.location.lon}}, 1], //labtek 5
+            // ['Labtek 7', -6.890115, 107.610814, 3], //labtek 7
+            // ['Labtek 8', -6.890547, 107.610787, 4], //labtek 8
+            // ['GKU Barat', -6.890448, 107.608865, 5], //gku barat
+            // ['GKU Timur', -6.890340, 107.611872, 6], //gku timur
+            // ['TVST', -6.889448, 107.610059, 7], //tvst
+            // ['Oktagon', -6.889065, 107.610050, 8], //oktagon
+            // ['USDI Comlabs', -6.889093, 107.610725, 9], //comlabs
+            // ['Gedung Kerjasama PLN', -6.889439, 107.610728, 10], //PLN
+            // ['Labtek Biru', -6.889041, 107.609398, 11], //labtek biru
+            // ['Labtek X', -6.889566, 107.609427, 12], //labtek X
+            // ['Mekanika Tanah', -6.889370, 107.611180, 13], //mektan
+            // ['CADL', -6.888449, 107.609506, 14], //cadl
+            // ['Gedung Pengembangan Riset dan Inovasi', -6.888337, 107.610042, 15], //pau
+            // ['Perpustakaan Pusat', -6.888183, 107.610739, 16], //perpus
+            // ['CAS', -6.888391, 107.611302, 17], //cas
+            // ['Gedung Fisika', -6.891389, 107.608958, 18], //fisika
+            // ['Gedung Teknik Sipil', -6.891943, 107.609183, 19], //sipil
+            // ['Aula Barat', -6.892417, 107.609913, 20], //aula barat
+            // ['Aula Timur', -6.892406, 107.610922, 21], //aula timur
+            // ['Gedung Lingkungan', -6.891197, 107.611590, 22], //lingkungan
+            // ['Gedung Planologi', -6.891555, 107.611302, 23], //plano
+            // ['Gedung Geodesi', -6.891482, 107.611933, 24], //geodesi
+            // ['Labtek XI-A Arsitektur', -6.891865, 107.611895, 25], //arsi
+            // ['Gedung Seni Rupa', -6.892178, 107.611653, 26], //sr
+            // ['Gedung FTMD', -6.889979, 107.608510, 27], //ftmd
+            // ['Gedung Teknik Penerbangan', -6.889340, 107.608529, 28], //aero
+            // ['Gedung Matematika', -6.888728, 107.608593, 29], //matematika
+            // ['Gedung SBM', -6.888126, 107.608708, 30] //sbm
+        ]
+
+        function setMarkers(map) {
+            var image = {
+                url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+                size: new google.maps.Size(20, 32),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(0, 32)
+            };
+            var shape = {
+                coords: [1, 1, 1, 20, 18, 20, 18, 1],
+                type: 'poly'
+            };
+            for (var i = 0; i < locations.length; i++) {
+                var loc = locations[i];
+                var tit = locations[i][0];
+                var marker = new google.maps.Marker({
+                    position: {lat: loc[1], lng: loc[2]},
+                    map: map,
+                    icon: image,
+                    shape: shape,
+                    title: loc[0],
+                    zIndex: loc[3],
+                });
+            }
+
+
+        }
+    </script>
+
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR7Z1yfZkNc2FIPYpqJOnNgY-CCH2Ptc&callback=initMap">
+    </script>
+{% endblock %}

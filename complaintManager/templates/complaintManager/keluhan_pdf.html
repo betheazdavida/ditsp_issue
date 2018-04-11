@@ -40,7 +40,7 @@
                     <strong>{{ complaint.priority }}</strong>
                   </td>
                   <td class="contact-note">
-                    <strong>{{ complaint.informer.name }}</strong>
+                    <strong>{{ complaint.member.user.first_name }} {{ complaint.member.user.last_name}}</strong>
                   </td>
                 </tr>
                 {% endfor %}

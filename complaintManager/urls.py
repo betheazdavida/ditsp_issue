@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^complaints/$', views.complaint_list, name='complaint_list'),
     url(r'^complaints/public/$', views.complaint_list_public, name='complaint_list_public'),
     url(r'^complaints/(?P<pk>[0-9]+)/$', views.complaint_status, name='complaint_status'),
+    url(r'^complaints/(?P<pk>[0-9]+)/download/$', views.complaint_download, name='complaint_download'),
     url(r'^complaints/(?P<pk>[0-9]+)/edit/$', views.complaint_edit, name='complaint_edit'),
     url(r'^complaints/(?P<pk>[0-9]+)/delete/$', views.complaint_delete, name='complaint_delete'),
     url(r'^informer_origins/$', views.informer_origin_index, name='informer_origin_index'),
