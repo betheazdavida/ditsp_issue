@@ -66,7 +66,10 @@
               <i class="fa fa-plus-square"></i> Tambah
             </a></li>
             <li><a href="{% url 'complaintManager:complaint_list' %}">
-              <i class="fa fa-list"></i> Daftar Keluhan
+              <i class="fa fa-list"></i> Daftar Keluhan Masuk
+            </a></li>
+            <li><a href="{% url 'complaintManager:complaint_list_out' %}">
+              <i class="fa fa-list"></i> Daftar Keluhan Keluar
             </a></li>
             {% if user.member.isSuperadmin %}
             <li><a href="{% url 'complaintManager:complaint_list_public' %}">

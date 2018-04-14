@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^submit/$', views.complaint_create_public, name='complaint_create_public'),
     url(r'^thanks/$', views.thanks, name='thanks'),
     url(r'^complaints/$', views.complaint_list, name='complaint_list'),
+    url(r'^complaints/out/$', views.complaint_list_out, name='complaint_list_out'),
     url(r'^complaints/public/$', views.complaint_list_public, name='complaint_list_public'),
     url(r'^complaints/(?P<pk>[0-9]+)/$', views.complaint_status, name='complaint_status'),
     url(r'^complaints/(?P<pk>[0-9]+)/download/$', views.complaint_download, name='complaint_download'),

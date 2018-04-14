@@ -136,6 +136,7 @@
       <find>log peruba</find>
       <find>Filter</find>
       <find>complaint_list</find>
+      <find>complaint_list_out</find>
       <find>complaints</find>
       <find>superad</find>
       <find>complaint_create</find>
