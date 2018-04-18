@@ -151,3 +151,48 @@
 	}
 </script>
 {% endblock %}
+
+<!-- <script>
+	function activateRoles() {
+		var originSelected = document.getElementById('id_member_form-origins').selectedIndex;
+		var internSapras = ['PU', 'PG', 'OG', 'KS', 'IA', 'PDA',
+							'PHA', 'PD', 'S', 'D', 'WD', 'KAI', 'KO', 'KPA', 'SA'];
+		
+		setVisibility(internSapras, "hide");
+		
+		switch (originSelected) {
+			case 1 :
+				break;
+			case 2 :
+				break;
+			case 3 :
+				 setVisibility(internSapras, "show");
+				break;
+			case 4 :
+				break;
+			case 5 :
+				break;
+			default :
+				break;
+		}
+	}
+
+	function setVisibility(roleArray, roleVisibility) {
+		for (i = 0; i < roleArray.length; i++) {
+			changeVisibility(roleArray[i], roleVisibility);
+		}
+	}
+
+	function changeVisibility(optionName, optionVisibility) {
+		console.log(optionName);
+		console.log(optionVisibility);
+		if (optionVisibility === "show") {
+			document.getElementById(optionName).style.display = "block";
+			console.log("Changed to visible");
+		} else if (optionVisibility === "hide") {
+			document.getElementById(optionName).style.display = "none";
+			console.log("Changed to none");
+		}
+		
+	}
+</script> -->
