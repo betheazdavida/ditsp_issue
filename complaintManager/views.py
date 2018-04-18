@@ -461,6 +461,18 @@ def complaint_list(request):
         assigned_divisions=None
     )
 
+    # Date filter
+    desired_start_date = request.GET.get('start_date')
+    desired_end_date = request.GET.get('end_date')
+    if desired_start_date:
+        complaints_unpaginated = complaints_unpaginated.filter(
+            Q(reported__gt=desired_start_date)
+        )
+    if desired_end_date:
+        complaints_unpaginated = complaints_unpaginated.filter(
+            Q(reported__lt=desired_end_date)
+        )
+
     orderings = {
         'none': '-reported',  # The default is to order by report time
         'reported': '-reported',  # Default may change one day
@@ -517,6 +529,8 @@ def complaint_list(request):
                 'filter': desired_filter,
                 'sort': desired_order
             },
+            'end_date': desired_end_date,
+            'start_date': desired_start_date
         })
 
 @login_required
@@ -538,6 +552,18 @@ def complaint_list_out(request):
     complaints_unpaginated = accessible_complaints.exclude(
         assigned_divisions=None
     )
+
+    # Date filter
+    desired_start_date = request.GET.get('start_date')
+    desired_end_date = request.GET.get('end_date')
+    if desired_start_date:
+        complaints_unpaginated = complaints_unpaginated.filter(
+            Q(reported__gt=desired_start_date)
+        )
+    if desired_end_date:
+        complaints_unpaginated = complaints_unpaginated.filter(
+            Q(reported__lt=desired_end_date)
+        )
 
     orderings = {
         'none': '-reported',  # The default is to order by report time
@@ -595,6 +621,8 @@ def complaint_list_out(request):
                 'filter': desired_filter,
                 'sort': desired_order
             },
+            'end_date': desired_end_date,
+            'start_date': desired_start_date
         })
 
 
