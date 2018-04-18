@@ -42,7 +42,7 @@
           <th>Nama</th>
           <th>Role</th>
           <th>Phone</th>
-          <th></th>
+          <th colspan="2"></th>
         </tr>
         {% for user in users %}
         <tr>
@@ -53,7 +53,10 @@
           <td>{{ user.member.phone }}</td>
           <td>
             <a href="{% url 'complaintManager:user_edit' user.pk %}" class="btn btn-primary">Edit</a>
+          </td>
+          <td>
             <button id='{{ user.pk }}-{{ user.username }}'class="btn btn-danger user-delete-btn" data-toggle="modal" data-target="#myModal">Delete</button>
+          </td>
           </td>
         </tr>
         {% endfor %}
