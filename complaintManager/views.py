@@ -146,7 +146,7 @@ def laporan(request):
                 'attachment; filename={0}.pdf'.format(filename)
             buffer = BytesIO()
             report = PdfPrint(buffer, 'A4')
-            pdf = report.collective_report(last_complaints, filename, )
+            pdf = report.collective_report(last_complaints, filename, dateduration)
             response.write(pdf)
             return response
     else:

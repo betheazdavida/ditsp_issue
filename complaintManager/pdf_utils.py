@@ -268,7 +268,7 @@ class PdfPrint:
         self.buffer.close()
         return pdf
 
-    def collective_report(self, complaints, title):
+    def collective_report(self, complaints, title, dateduration):
         # set some characteristics for pdf document
         doc = SimpleDocTemplate(
             self.buffer,
@@ -291,6 +291,8 @@ class PdfPrint:
         data = []
         data.append(Paragraph(title, styles['Title']))
         # insert a blank space
+        data.append(Spacer(1, 24))
+        data.append(Paragraph(dateduration, styles['ParagraphTitle']))
         data.append(Spacer(1, 12))
         table_data = []
         # table header
@@ -310,11 +312,11 @@ class PdfPrint:
                 divisi_list.append(division.name)
             divisi_string = ", ".join(divisi_list)
             if (complaint.status == 'S'):
-                status = 'Submitted'
+                status = 'Dilaporkan'
             elif (complaint.status == 'P'):
-                status = 'On Progress'
+                status = 'Dalam Pengerjaan'
             else:
-                status = 'Finished'
+                status = 'Selesai'
             table_data.append(
                 [complaint.reported.strftime('%d-%m-%Y'),
                  Paragraph(complaint.description, styles['Justify']),
