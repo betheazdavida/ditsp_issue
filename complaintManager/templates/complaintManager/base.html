@@ -69,8 +69,8 @@
               <i class="fa fa-list"></i> Daftar Keluhan
             </a></li>
             {% if user.member.isSuperadmin %}
-            <li><a href="{% url 'complaintManager:complaint_list_public' %}">
-              <i class="fa fa-list-alt"></i> Daftar Keluhan Publik
+            <li><a href="{% url 'complaintManager:index' %}">
+              <i class="fa fa-list-alt"></i> Rangkuman
             </a></li>
             {% endif %}
             <li class="sidebar-menu-section-header">
@@ -78,10 +78,13 @@
             </li>
             {% if user.member.isSuperadmin %}
               <li><a href="{% url 'complaintManager:user_index' %}">
-                <i class="fa fa-user-plus"></i> User Management
+                <i class="fa fa-user-plus"></i> Manajemen User
               </a></li>
-              <li><a href="{% url 'complaintManager:informer_origin_index' %}">
-                <i class="fa fa-address-book"></i> Asal Pelapor Management
+              <li><a href="{% url 'complaintManager:role_management_index' %}">
+                <i class="fa fa-address-book"></i> Manajemen Divisi dan Role Sarpras
+              </a></li>
+              <li><a href="{% url 'complaintManager:external_user_origin_index' %}">
+                <i class="fa fa-address-book"></i> Manajemen Asal Pelapor Eksternal
               </a></li>
             {% endif %}
             <li><a href="{% url 'complaintManager:logout' %}">

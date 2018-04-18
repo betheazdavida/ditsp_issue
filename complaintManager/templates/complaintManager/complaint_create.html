@@ -41,15 +41,7 @@
 							</div>
 							<div class="form-group">
 								<label class="control-label" for="origin">Kategori Sumber</label><br/>
-								{{user.member.origin}}
-								<!-- <select class="form-control" id="id_master_origin" onchange="hideOriginOptions()">
-									<option value="None" selected>---------</option>
-									<option value="Pimpinan">Pimpinan</option>
-									<option value="Unit">Unit ITB</option>
-									<option value="Intern">Intern Direktorat Sarana dan Prasarana</option>
-									<option value="Civitas">Civitas Akademik</option>
-									<option value="Eksternal">Eksternal ITB (Masyarakat, Tamu, dan Umum)</option>
-								</select> -->
+								{{user.member.role.origin}}
 							</div>
 							<div class="form-group">
 								<label class="control-label" for="origin">Rincian Sumber</label><br/>
@@ -65,42 +57,20 @@
 								{{location_form.name}}
 							</div>
 							<div class="form-group">
-								<label class="control-label" for="assigned_divisions">Jenis Keluhan</label><br>
-								<ul id="id_complaint-assigned_divisions">
-    								<li><label for="id_complaint-assigned_divisions_0"><input type="checkbox" name="complaint-assigned_divisions" value="1" style="margin-right: 10px" id="id_complaint-assigned_divisions_0" onclick="changeVisibility('PU')">Perawatan Utilitas</label></li>
-								    <li><label for="id_complaint-assigned_divisions_1"><input type="checkbox" name="complaint-assigned_divisions" value="2" style="margin-right: 10px" id="id_complaint-assigned_divisions_1" onclick="changeVisibility('PG')">Perawatan Gedung</label></li>
-   									<li><label for="id_complaint-assigned_divisions_2"><input type="checkbox" name="complaint-assigned_divisions" value="3" style="margin-right: 10px" id="id_complaint-assigned_divisions_2" onclick="changeVisibility('OG')">Operasional dan Kebersihan Gedung</label></li>
-    								<li><label for="id_complaint-assigned_divisions_3"><input type="checkbox" name="complaint-assigned_divisions" value="4" style="margin-right: 10px" id="id_complaint-assigned_divisions_3" onclick="changeVisibility('KS')">Kebersihan dan Pengelolaan Sampah</label></li>
-    								<li><label for="id_complaint-assigned_divisions_4"><input type="checkbox" name="complaint-assigned_divisions" value="5" style="margin-right: 10px" id="id_complaint-assigned_divisions_4" onclick="changeVisibility('IA')">Inventarisasi Aset</label></li>
-    								<li><label for="id_complaint-assigned_divisions_5"><input type="checkbox" name="complaint-assigned_divisions" value="6" style="margin-right: 10px" id="id_complaint-assigned_divisions_5" onclick="changeVisibility('PDA')">Pendayagunaan Aset</label></li>
-    								<li><label for="id_complaint-assigned_divisions_6"><input type="checkbox" name="complaint-assigned_divisions" value="7" style="margin-right: 10px" id="id_complaint-assigned_divisions_6" onclick="changeVisibility('PHA')">Penghapusan Aset</label></li>
-    								<li><label for="id_complaint-assigned_divisions_7"><input type="checkbox" name="complaint-assigned_divisions" value="8" style="margin-right: 10px" id="id_complaint-assigned_divisions_7" onclick="changeVisibility('PD')">Penerimaan dan Distribusi</label></li>
-    								<li><label for="id_complaint-assigned_divisions_8"><input type="checkbox" name="complaint-assigned_divisions" value="9" style="margin-right: 10px" id="id_complaint-assigned_divisions_8" onclick="changeVisibility('S')">Sekretariat</label></li>
-								</ul>
-								<!--{{complaint_form.assigned_divisions}}-->
+								{{complaint_form.assigned_divisions}}
 							</div>
-							<div class="form-group">
+
+							</div>
+				 			<div class="form-group">
 								<label class="control-label" for="leader">Divisi Leader Keluhan</label>
-								<select name="complaint-leader" class="form-control" id="id_complaint-leader">
-  									<option value="" selected="">---------</option>
-									<option value="1" id="PU" style="display: none;">Perawatan Utilitas</option>
-									<option value="2" id="PG" style="display: none;">Perawatan Gedung</option>
-									<option value="3" id="OG" style="display: none;">Operasional dan Kebersihan Gedung</option>
-									<option value="4" id="KS" style="display: none;">Kebersihan dan Pengelolaan Sampah</option>
-									<option value="5" id="IA" style="display: none;">Inventarisasi Aset</option>
-									<option value="6" id="PDA" style="display: none;">Pendayagunaan Aset</option>
-									<option value="7" id="PHA" style="display: none;">Penghapusan Aset</option>
-									<option value="8" id="PD" style="display: none;">Penerimaan dan Distribusi</option>
-									<option value="9" id="S" style="display: none;">Sekretariat</option>
-								</select>
-								<!--{{complaint_form.leader}}
+								{{complaint_form.leader}}
 								{% if complaint_form.leader.errors %}
 										<ul class="error-list">
 										{% for error in complaint_form.leader.errors %}
 												<li style="color: red;">{{ error|escape }}</li>
 										{% endfor %}
 										</ul>
-								{% endif %}-->
+								{% endif %}
 							</div>
 							<div class="form-group">
 								<label class="control-label" for="description">Keluhan</label>
@@ -129,37 +99,97 @@
 {% endblock %}
 
 {% block script %}
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="http://yourjavascript.com/7174319415/script.js"></script>
 <script>
-	// Handling informer origin's dropdowns
-	function hideOriginOptions() {
-		var masterOrigin = $('#id_master_origin').val();
-		var options = $('#id_informer-origin').children();
-		$(options[0]).prop('selected', true);
+	initLeaderOption();
+	addCheckBoxOnChange();
+	function addCheckBoxOnChange() {
+		var options = $('input[type=checkbox]');
 		for (var i = 1; i < options.length; i++) {
 			var option = options[i];
-			if (option.text.indexOf(masterOrigin) === -1 || masterOrigin === 'None') {
-				$(option).prop('disabled', true);
-			} else {
-				$(option).prop('disabled', false);
+			console.log(option.value);
+			option.onchange = function(e){
+				changeVisibility(e.target.value)
 			}
 		}
 	}
-
-	hideOriginOptions('None');
-</script>
-<script type="text\javascript"></script>
-<script>
-	function changeVisibility(optionName) {
-		console.log(optionName);
-		if (document.getElementById(optionName).style.display == "none") {
-			document.getElementById(optionName).style.display = "block";
-			console.log("Changed to visible");
-		} else if (document.getElementById(optionName).style.display == "block") {
-			document.getElementById(optionName).style.display = "none";
-			console.log("Changed to none");
+	
+	function initLeaderOption() {
+		var options = $('#id_complaint-leader').children();
+		for (var i = 1; i < options.length; i++) {
+			var option = options[i];
+			$(option).prop('disabled', true);
+		}
+	}
+	
+	function changeVisibility(divisionValue) {
+		console.log("masukCV"+divisionValue);
+		var leaderOption = $('#id_complaint-leader').children();
+		for (var i = 1; i < leaderOption.length; i++) {
+			var selectLeader = leaderOption[i];
+			if (selectLeader.value==divisionValue) {
+				console.log("sama"+selectLeader.value);
+				if ($(selectLeader).prop('disabled')==true) {
+					$(selectLeader).prop('disabled', false);
+				} else {
+					$(selectLeader).prop('disabled', true);					
+				}
+			}
+		}
+	}
+	// hideRoleOptions();
+	function hideDivisionOptions(){
+		var none = true;
+		var origin = $('#id_member_form-origins');
+		var options = $('#id_member-role').children();
+		$(options[0]).prop('selected', true);
+		if (origin.val() === '') {
+			none = true;
+			for (var i = 1; i < options.length; i++) {
+				var option = options[i];
+				$(option).prop('disabled', true);
+			}
+		} else {
+			none = false;
+		}
+		console.log("none="+none);
+		if (!none){
+			var valueSelected  = origin.find("option:selected");
+			var origin_name   = valueSelected.text();
+			data = {'origin' : origin_name };
+			ajax('/getRoles',data,function(result){
+				if (result.length==0) {
+					for (var i = 1; i < options.length; i++) {
+						var option = options[i];
+						$(option).prop('disabled', true);
+					}
+				} else {
+					console.log("masuk result!=0")
+					for (var i = 1; i < options.length; i++) {
+						var option = options[i];
+						var found = false;
+						var j=result.length-1;
+						while (!found && j>=0){
+							if (result[j].name==option.text) {
+								found=true;
+							} else {
+								j--;
+							}
+						}
+						console.log("abis while");
+						if (!found) {
+							$(option).prop('disabled', true);
+						} else {
+							$(option).prop('disabled', false);
+						}
+					}	
+				}
+			});
 		}
 	}
 </script>
+
 <script>
 	function initMap() {
     	var intel = {lat: -6.890359, lng: 107.610379};

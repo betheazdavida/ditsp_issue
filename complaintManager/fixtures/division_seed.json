@@ -3,63 +3,72 @@
     "model": "complaintManager.division",
     "pk": 1,
     "fields": {
-      "name": "PU"
+      "name": "Perawatan Utilitas",
+      "code": "PU"
     }
   },
   {
     "model": "complaintManager.division",
     "pk": 2,
     "fields": {
-      "name": "PG"
+      "name": "Perawatan Gedung",
+      "code": "PG"
     }
   },
   {
     "model": "complaintManager.division",
     "pk": 3,
     "fields": {
-      "name": "OG"
+      "name": "Operasional dan Kebersihan Gedung",
+      "code": "OG"
     }
   },
   {
     "model": "complaintManager.division",
     "pk": 4,
     "fields": {
-      "name": "KS"
+      "name": "Kebersihan dan Pengelolaan Sampah",
+      "code": "KS"
     }
   },
   {
     "model": "complaintManager.division",
     "pk": 5,
     "fields": {
-      "name": "IA"
+      "name": "Inventarisasi Aset",
+      "code": "IA"
     }
   },
   {
     "model": "complaintManager.division",
     "pk": 6,
     "fields": {
-      "name": "PDA"
+      "name": "Pendayagunaan Aset",
+      "code": "PDA"
     }
   },
   {
     "model": "complaintManager.division",
     "pk": 7,
     "fields": {
-      "name": "PHA"
+      "name": "Penghapusan Aset",
+      "code": "PHA"
     }
   },
   {
     "model": "complaintManager.division",
     "pk": 8,
     "fields": {
-      "name": "PD"
+      "name": "Penerimaan dan Distribusi",
+      "code": "PD"
     }
   },
   {
     "model": "complaintManager.division",
     "pk": 9,
     "fields": {
-      "name": "S"
+      "name": "Sekretariat",
+      "code": "S"
     }
   }
 ]

@@ -43,17 +43,23 @@
 								{{ user_form.last_name}}
 							</div>
 							<div class="form-group">
-									<label class="control-label" for="{{ member_form.phone.id_for_label }}e">Phone :</label>
-									{{ member_form.phone }}
-								</div>
-							<div class="form-group">
-									<label class="control-label" for="{{ member_form.origins.id_for_label }}e">Role :</label>
-									{{ member_form.origin }}
-								</div>
-							<div class="form-group">
-								<label class="control-label" for="{{ member_form.roles.id_for_label }}e">Role :</label>
-								{{ member_form.role }}
+								<label class="control-label" for="{{ member_form.phone.id_for_label }}e">Phone :</label>
+								{{ member_form.phone }}
 							</div>
+							<div class="form-group">
+									<label class="control-label" for="{{ member_form.origins.id_for_label }}e">Origin :</label>
+									<select name="member_form-origins" id="id_member_form-origins" class="form-control" onchange="hideRoleOptions()">
+									<!-- <select name="member_form-origins" id="id_member_form-origins" class="form-control"> -->
+										<option value="" selected="">---------</option>
+										{% for origin in origins %}
+										<option value="{{origin.code}}">{{origin.name}}</option>
+										{% endfor %}
+									</select>
+								</div>
+								<div class="form-group">
+									<label class="control-label" for="{{ member_form.role.id_for_label }}e">Role :</label>
+									{{member_form.role}}
+								</div>
 							<div>
 								<label class="control-label" for="{{ user_form.last_name.id_for_label }}">Hak Akses Keluhan Berdasarkan Organogram :</label>
 								<ul>
@@ -75,4 +81,73 @@
 	</div>
 </div>
 
+{% endblock %}
+{% block script %}
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="http://yourjavascript.com/7174319415/script.js"></script>
+<script>
+	// initialization();
+	// function initialization(){
+	// 	// $(options[]).prop('selected', true);
+	// }
+	var options = $('#id_member-role').children();
+	hideRoleOptions();
+	function show() {
+		var options = $('#id_member-role').children();
+		for (var i=0; i<options.length;i++) {
+			option = options[i];
+			alert(option.val);
+		}
+	}
+	function hideRoleOptions(){
+		var none = true;
+		var origin = $('#id_member_form-origins');
+		var options = $('#id_member-role').children();
+		
+		if (origin.val() === '') {
+			none = true;
+			for (var i = 1; i < options.length; i++) {
+				var option = options[i];
+				$(option).prop('disabled', true);
+			}
+		} else {
+			none = false;
+		}
+		console.log("none="+none);
+		if (!none){
+			var valueSelected  = origin.find("option:selected");
+			var origin_name   = valueSelected.text();
+			data = {'origin' : origin_name };
+			ajax('/getRoles',data,function(result){
+				if (result.length==0) {
+					for (var i = 1; i < options.length; i++) {
+						var option = options[i];
+						$(option).prop('disabled', true);
+					}
+
+				} else {
+					console.log("masuk result!=0")
+					for (var i = 1; i < options.length; i++) {
+						var option = options[i];
+						var found = false;
+						var j=result.length-1;
+						while (!found && j>=0){
+							if (result[j].name==option.text) {
+								found=true;
+							} else {
+								j--;
+							}
+						}
+						console.log("abis while");
+						if (!found) {
+							$(option).prop('disabled', true);
+						} else {
+							$(option).prop('disabled', false);
+						}
+					}	
+				}
+			});
+		}
+	}
+</script>
 {% endblock %}

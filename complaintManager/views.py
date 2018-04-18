@@ -12,6 +12,7 @@ from xhtml2pdf import pisa
 from django.template.loader import render_to_string
 from django.template.loader import get_template
 from django.template import Context
+from django.http import HttpResponse
 from cgi import escape
 try:
     from StringIO import StringIO
@@ -22,7 +23,7 @@ from .models import *
 import csv
 from django.http import HttpResponse
 import datetime
-import json
+import json as json
 import sys
 
 # Create your views here.
@@ -128,7 +129,7 @@ def laporan(request):
                     list.append(divisi_string)
                     list.append(complaint.priority)
                     list.append(complaint.member.user.first_name)
-                    list.append(complaint.member.origin.name)
+                    list.append(complaint.member.role.origin.name)
                     list.append(complaint.member.role.name)
                     writer.writerow(list)
                     list = []
@@ -180,7 +181,8 @@ def complaint_create(request):
     if request.method == 'POST':
         complaint_form = ComplaintCreateForm(request.POST, prefix='complaint')
         location_form = LocationForm(request.POST, prefix='location')
-        if complaint_form.is_valid() and location_form.is_valid() :
+        # print(str(complaint_form.instance.leader))
+        if complaint_form.is_valid() and location_form.is_valid() and str(complaint_form.instance.leader)!="None" :
             location_x = location_form.save(commit=False)
             location_x.save()
             complaint = complaint_form.save(commit=False)
@@ -206,6 +208,9 @@ def complaint_create(request):
             return redirect(
                 "%s?success_create=true" %
                 reverse('complaintManager:complaint_list'))
+        else:
+            complaint_form = ComplaintCreateForm(prefix='complaint')
+            location_form = LocationForm(prefix='location')
     else:
         # informer_form = InformerForm(prefix='informer')
         complaint_form = ComplaintCreateForm(prefix='complaint')
@@ -224,6 +229,7 @@ def complaint_create_public(request):
         informer_form = InformerForm(request.POST, prefix='informer')
         complaint_form = ComplaintCreatePublicForm(
             request.POST, prefix='complaint')
+        
         location_form = LocationForm(request.POST, prefix='location')
         if complaint_form.is_valid() and informer_form.is_valid() and location_form.is_valid():
             informer = informer_form.save(commit=False)
@@ -360,6 +366,8 @@ def complaint_delete(request, pk):
 @login_required
 def user_index(request):
     # Query string
+    q = ''
+    category = ''
     if request.GET.get('q'):
         q = request.GET.get('q')
         users = User.objects.filter(
@@ -368,15 +376,21 @@ def user_index(request):
             | Q(username__icontains=q)
             | Q(email__icontains=q)
         )
+    elif request.GET.get('category'):
+        category = request.GET.get('category')
+        users = User.objects.filter(
+            Q(member__role__origin__code=category)
+        )
     else:
         q = ''
-        users = User.objects.all()
+        users = User.objects.filter(Q(member__role__origin__code="Intern"))
 
     template = 'complaintManager/user_index.html'
-    return render(request, template, {'users': users, 'q' : q})
+    return render(request, template, {'users': users, 'q' : q,'category':category})
 
 @login_required
 def user_edit(request, pk):
+    origins=Origin.objects.all()
     user = get_object_or_404(User, pk=pk)
     organogram_divisions = user.member.role.divisions.all()
     if request.method == 'POST':
@@ -395,16 +409,22 @@ def user_edit(request, pk):
     template = 'complaintManager/user_edit.html'
     return render(
         request, template, {
-            'pk': pk, 'member_form':member_form, 'user_form': user_form,'organogram_divisions':organogram_divisions})
+            'origins':origins,'pk': pk, 'member_form':member_form, 'user_form': user_form,'organogram_divisions':organogram_divisions})
 
 
 @login_required
 def user_create(request):
-    
+    origins = Origin.objects.all()
     if request.method == 'POST':
         user_form = UserForm(request.POST, prefix='user')
         member_form = MemberCreateForm(request.POST, prefix='member')
+        print("userform="+str(user_form.is_valid()))
+        print("memberform="+str(member_form.is_valid()))
+        print(member_form.instance.phone)
+        # print(member_form.instance.role.name)
+        
         if user_form.is_valid() and member_form.is_valid():
+            print("valid")
             user = user_form.save(commit=False)
             user.set_password(request.POST['user-password'])
             user.save()
@@ -413,6 +433,8 @@ def user_create(request):
             member.save()
             messages.success(request, 'Pengguna "' + user.username + '" berhasil dibuat')
             return redirect('complaintManager:user_index')
+        else:
+            print("gavalid")
     else:
         
         user_form = UserForm(prefix='user')
@@ -420,7 +442,24 @@ def user_create(request):
     template = 'complaintManager/user_create.html'
     return render(
         request, template, {
-            'user_form': user_form, 'member_form': member_form })
+            'origins':origins, 'user_form': user_form, 'member_form': member_form })
+
+
+def getRoles(request):
+    #country_name = request.POST['country_name']
+    origin_name = request.GET['origin']
+    print ("ajax origin_name "+ origin_name)
+
+    result_set = []
+    all_origin = []
+    # answer = str(origin_name[1:-1])
+    selected_origin = Origin.objects.get(name=origin_name)
+    print ("selected origin name "+str(selected_origin))
+    all_roles = selected_origin.role_set.all()
+    for role in all_roles:
+        # print "role name", role.name
+        result_set.append({'id':role.id,'code':role.code,'name': role.name})
+    return HttpResponse(json.dumps(result_set), content_type='application/json')
 
 @login_required
 def user_delete(request, pk):
@@ -556,28 +595,122 @@ def complaint_list_public(request):
 
 
 @login_required
-def informer_origin_index(request):
+def role_management_index(request):
     q = ''
     category = ''
     if request.GET.get('q'):
         q = request.GET.get('q')
-        origins = InformerOrigin.objects.filter(
-            Q(master_origin__icontains=q)
-            | Q(specific_origin__icontains=q)
+        roles = Role.objects.filter(
+            Q(name__icontains=q)
+        )
+    else:
+        roles = Role.objects.filter(Q(origin__code="Intern"))
+    divisions = Division.objects.all()
+    form = ExternalUserOriginForm()
+    division_form = DivisionForm()
+    form_edit = ExternalUserOriginForm(prefix='edit')
+    template = 'complaintManager/role_management_index.html'
+    return render(
+        request, template, {
+            'division_form':division_form,'divisions':divisions,'roles':roles, 'form': form, 'form_edit': form_edit, 'q': q, 'category': category
+        })
+
+@login_required
+def role_management_add(request):
+    if request.method == 'POST':
+        role_form = RoleForm(request.POST)
+        if role_form.is_valid():
+            print("valid")
+            role = role_form.save(commit=False)
+            role.origin = Origin(id=3)
+            role.save()
+            role_form.save_m2m()
+            return redirect('complaintManager:role_management_index')
+        else:
+            print("ga valid :(")
+    else:
+        role_form = RoleForm()
+    template = 'complaintManager/role_management_add.html'
+    return render(
+        request, template, {
+            'role_form':role_form })
+
+@login_required
+def division_add(request):
+    form = DivisionForm(request.POST)
+    if form.is_valid():
+        form.save() 
+    return redirect("%s?success_create=true" % reverse('complaintManager:role_management_index'))
+
+@login_required
+def role_management_edit(request, pk):
+    role = get_object_or_404(Role, pk=pk)
+    if request.method == 'POST':
+        print("masuk valid")
+        role_form = RoleForm(request.POST, instance=role)
+        print(role_form.instance.name)
+        for division in role_form.instance.divisions.all():
+            print(division.name)
+        if role_form.is_valid():
+            role_form.save()
+            return redirect('complaintManager:role_management_index')
+    else:
+        print("valid")
+        role_form = RoleForm(instance=role)
+    template = 'complaintManager/role_management_edit.html'
+    return render(
+        request, template, {
+            'pk': pk, 'role_form':role_form})
+
+@login_required
+def division_edit(request, pk):
+    division = get_object_or_404(Division, pk=pk)
+    form = DivisionForm(request.POST, instance=division)
+    if form.is_valid():
+        print("Masuk valid")
+        print(form.instance.name)
+        print(form.instance.code)
+        form.save()
+    else:
+        print("invalid form")
+    return redirect(reverse('complaintManager:role_management_index'))
+
+@login_required
+def role_management_delete(request, pk):
+    if request.method == "POST":
+        role = Role.objects.get(pk=pk)
+        role.delete()
+    return redirect(reverse('complaintManager:role_management_index'))
+
+@login_required
+def division_delete(request, pk):
+    if request.method == "POST":
+        division = Division.objects.get(pk=pk)
+        division.delete()
+    return redirect(reverse('complaintManager:role_management_index'))
+
+@login_required
+def external_user_origin_index(request):
+    q = ''
+    category = ''
+    if request.GET.get('q'):
+        q = request.GET.get('q')
+        roles = Role.objects.filter(
+            Q(name__icontains=q)
         )
     elif request.GET.get('category'):
         category = request.GET.get('category')
-        origins = InformerOrigin.objects.filter(
-            Q(master_origin__icontains=category)
+        roles = Role.objects.filter(
+            Q(origin__code=category)
         )
     else:
-        origins = InformerOrigin.objects.all()
-    form = InformerOriginForm()
-    form_edit = InformerOriginForm(prefix='edit')
-    template = 'complaintManager/informer_origin_index.html'
+        roles = Role.objects.filter(~Q(origin__code="Intern"))
+    form = ExternalUserOriginForm()
+    form_edit = ExternalUserOriginForm(prefix='edit')
+    template = 'complaintManager/external_user_origin_index.html'
     return render(
         request, template, {
-            'origins': origins, 'form': form, 'form_edit': form_edit, 'q': q, 'category': category
+            'roles':roles, 'form': form, 'form_edit': form_edit, 'q': q, 'category': category
         })
 
 
@@ -585,9 +718,15 @@ def informer_origin_index(request):
 def informer_origin_add(request):
     form = InformerOriginForm(request.POST)
     if form.is_valid():
-        form.save()
+        form.save()  
     return redirect(reverse('complaintManager:informer_origin_index'))
 
+@login_required
+def external_user_origin_add(request):
+    form = ExternalUserOriginForm(request.POST)
+    if form.is_valid():
+        form.save() 
+    return redirect("%s?success_create=true" % reverse('complaintManager:external_user_origin_index'))
 
 @login_required
 def informer_origin_edit(request, pk):
@@ -597,6 +736,17 @@ def informer_origin_edit(request, pk):
         form.save()
     return redirect(reverse('complaintManager:informer_origin_index'))
 
+@login_required
+def external_user_origin_edit(request, pk):
+    external_user_origin = get_object_or_404(Role, pk=pk)
+    form = ExternalUserOriginForm(request.POST, instance=external_user_origin)
+    if form.is_valid():
+        print("Masuk valid")
+        form.save()
+    else:
+        print("invalid form")
+    return redirect(reverse('complaintManager:external_user_origin_index'))
+
 
 @login_required
 def informer_origin_delete(request, pk):
@@ -604,6 +754,13 @@ def informer_origin_delete(request, pk):
         origin = InformerOrigin.objects.get(pk=pk)
         origin.delete()
     return redirect(reverse('complaintManager:informer_origin_index'))
+
+@login_required
+def external_user_origin_delete(request, pk):
+    if request.method == "POST":
+        role = Role.objects.get(pk=pk)
+        role.delete()
+    return redirect(reverse('complaintManager:external_user_origin_index'))
 
 
 @login_required
