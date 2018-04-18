@@ -36,8 +36,8 @@
       </div>
     </div>
   </div>
-  <div class="col-md-8">
-    <div class="panel-body nopadding">
+  <div class="panel-body nopadding">
+    <div class="col-md-8">
       <table class="table table-condensed table-hover summary-report">
         <tbody id="summary_report">
           <tr>
@@ -83,25 +83,26 @@
         </tbody>
       </table>
     </div>
+    <div class="col-md-4">
+        <h4>Tambah Asal Pelapor Eksternal</h4>
+        <br>
+        <form method="POST" action="{% url 'complaintManager:external_user_origin_add' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="control-label" for="{{ user_form.origin.id_for_label }}">Kategori:</label>
+            {{ form.origin }}
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="{{ user_form.role.id_for_label }}">Pekerjaan/Jabatan:</label>
+            {{ form.name }}
+          </div>
+          <button class="btn btn-primary">Submit</button>
+        </form>
+      </div>
   </div>
 
 </div>
-<div class="col-md-4">
-  <h4>Tambah Asal Pelapor Eksternal</h4>
-  <br>
-  <form method="POST" action="{% url 'complaintManager:external_user_origin_add' %}">
-    {% csrf_token %}
-    <div class="form-group">
-      <label class="control-label" for="{{ user_form.origin.id_for_label }}">Kategori:</label>
-      {{ form.origin }}
-    </div>
-    <div class="form-group">
-      <label class="control-label" for="{{ user_form.role.id_for_label }}">Pekerjaan/Jabatan:</label>
-      {{ form.name }}
-    </div>
-    <button class="btn btn-primary">Submit</button>
-  </form>
-</div>
+
 
 <!-- <form id="edit-origin-form" method="POST" action="{% url 'complaintManager:external_user_origin_edit' 2%}" style="display: none">
   {% csrf_token %}
