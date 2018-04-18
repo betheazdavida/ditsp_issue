@@ -14,10 +14,10 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table,\
-    TableStyle
-from .models import Division, Log
+    TableStyle, Image
+from .models import Division, Log, ComplaintImages
 import datetime
-
+from reportlab.lib import utils
 
 
 class PdfPrint:
@@ -244,8 +244,6 @@ class PdfPrint:
             Paragraph('Tanggal', styles['TableHeader']),
             Paragraph('Deskripsi Perubahan', styles['TableHeader']),
             Paragraph('Diubah Oleh', styles['TableHeader'])])
-        cek = complaint.log_set.all
-        print(complaint.log_set.all)
         logs = Log.objects.filter(complaint=complaint)
         for log in logs:
             date = str(log.date.strftime("%d-%m-%Y"))
@@ -259,6 +257,20 @@ class PdfPrint:
              ('BACKGROUND', (0, 0), (-1, 0), colors.gray)]))
         data.append(Spacer(1, 12))
         data.append(logtable)
+        data.append(Spacer(1, 24))
+        data.append(Paragraph('Media: ', styles['Justify']))
+        images = ComplaintImages.objects.filter(complaint=complaint)
+        for image in images:
+            # img = Image('http://127.0.0.1:8888/media/' + str(image.src))
+            img = utils.ImageReader('http://127.0.0.1:8888/media/' + str(image.src))
+            iw, ih = img.getSize()
+            aspect = ih / float(iw)
+            if iw > ih:
+                width = 300
+                data.append(Image('http://127.0.0.1:8888/media/' + str(image.src), width, width * aspect))
+            else:
+                height = 300
+                data.append(Image('http://127.0.0.1:8888/media/' + str(image.src), height / aspect, height))
         # insert a blank space
         data.append(Spacer(1, 12))
 
