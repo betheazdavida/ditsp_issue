@@ -140,12 +140,13 @@ def laporan(request):
             response = HttpResponse(content_type='application/pdf')
             start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").strftime("%d-%m-%Y")
             end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").strftime("%d-%m-%Y")
-            filename = 'Collective Complaint Report from ' + start_date + ' to ' + end_date
+            filename = 'Laporan Penanganan Keluhan'
+            dateduration = 'Jangka Waktu: ' + start_date + ' s.d. ' + end_date
             response['Content-Disposition'] = \
                 'attachment; filename={0}.pdf'.format(filename)
             buffer = BytesIO()
             report = PdfPrint(buffer, 'A4')
-            pdf = report.collective_report(last_complaints, filename)
+            pdf = report.collective_report(last_complaints, filename, )
             response.write(pdf)
             return response
     else:
@@ -272,7 +273,7 @@ def complaint_download(request, pk):
     complaint = get_object_or_404(Complaint, pk=pk)
 
     response = HttpResponse(content_type='application/pdf')
-    filename = 'Individual Complaint Report for \'' + complaint.title + '\''
+    filename = 'Laporan Penanganan Keluhan \'' + complaint.title + '\''
     response['Content-Disposition'] = \
         'attachment; filename={0}.pdf'.format(filename)
     buffer = BytesIO()

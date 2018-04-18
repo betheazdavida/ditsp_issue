@@ -15,7 +15,8 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table,\
     TableStyle
-from .models import Division
+from .models import Division, Log
+import datetime
 
 
 
@@ -198,12 +199,69 @@ class PdfPrint:
         # list used for elements added into document
         data = []
         data.append(Paragraph(title, styles['Title']))
+        data.append(Spacer(1,48))
+        table_data = []
+        table_data.append(
+            ['Nama Pelapor', ': ' + complaint.member.user.first_name + ' ' + complaint.member.user.last_name])
+        table_data.append(
+            ['Nomor Telepon Pelapor', ': ' + complaint.member.phone])
+        table_data.append(
+            ['E-mail Pelapor', ': ' + complaint.member.user.email])
+        table_data.append(
+            ['Kategori Sumber Pelapor', ': ' + str(complaint.member.role)])
+        table_data.append(
+            ['Rincian Pelapor', ': ' + str(complaint.member.origin)])
+        table_data.append(
+            ['Judul Keluhan', ': ' + complaint.title])
+        divisi_list = []
+        for division in complaint.assigned_divisions.all():
+            divisi_list.append(division.name)
+        divisi_string = ", ".join(divisi_list)
+        table_data.append(
+            ['Jenis Keluhan', ': ' + divisi_string])
+        table_data.append(
+            ['Deskripsi Keluhan', ': ' + complaint.description])
+        if (complaint.status == 'S'):
+            status = 'Submitted'
+        elif (complaint.status == 'P'):
+            status = 'On Progress'
+        else:
+            status = 'Finished'
+        table_data.append(
+            ['Status Keluhan', ': ' + status])
+        table_data.append(
+            ['Leader', ': ' + complaint.leader.name])
+        table_data.append(
+            ['Lokasi Kejadian', ': ' + complaint.location.name])
+        # create document
+        table = Table(table_data)
+        table.hAlign = 'LEFT'
+        data.append(table)
+        data.append(Spacer(1, 24))
+        data.append(Paragraph('Log Perubahan: ', styles['Justify']))
+        logtable_data = []
+        logtable_data.append([
+            Paragraph('Tanggal', styles['TableHeader']),
+            Paragraph('Deskripsi Perubahan', styles['TableHeader']),
+            Paragraph('Diubah Oleh', styles['TableHeader'])])
+        cek = complaint.log_set.all
+        print(complaint.log_set.all)
+        logs = Log.objects.filter(complaint=complaint)
+        for log in logs:
+            date = str(log.date.strftime("%d-%m-%Y"))
+            logtable_data.append([date, log.description, log.creator])
+        logtable = Table(logtable_data)
+        logtable.hAlign = 'LEFT'
+        logtable.setStyle(TableStyle(
+            [('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+             ('BOX', (0, 0), (-1, -1), 0.5, colors.black),
+             ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+             ('BACKGROUND', (0, 0), (-1, 0), colors.gray)]))
+        data.append(Spacer(1, 12))
+        data.append(logtable)
         # insert a blank space
         data.append(Spacer(1, 12))
-        data.append(Paragraph('Cek\t: Isi data', styles['Justify']))
-        data.append(Paragraph('Cek 2\t: Isi dataa', styles['Justify']))
-        data.append(Paragraph('Cek 3\t: Isi dataa', styles['Justify']))
-        data.append(Paragraph('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ullamcorper congue risus, et euismod felis sagittis at. Nam nec ullamcorper turpis. Proin feugiat pulvinar massa non mattis. Morbi sodales nibh libero, sit amet volutpat erat maximus quis. Curabitur libero tortor, varius in nisi in, tristique accumsan mi. Quisque rutrum tortor eget porta laoreet. Curabitur id pellentesque tortor, a imperdiet odio. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nulla facilisi. Donec dapibus sit amet lectus et feugiat. In malesuada, erat sed semper vestibulum, felis leo fermentum eros, vel laoreet purus velit id lorem. Maecenas et neque tristique, dictum magna id, placerat risus. Pellentesque purus dolor, porttitor et scelerisque id, dapibus vel tortor. Fusce pretium tellus vitae arcu viverra rhoncus quis sed nulla. Mauris varius dictum mi quis viverra. Aliquam semper tempor est condimentum viverra. Nam eget velit lectus. Praesent vulputate erat ac mi auctor euismod. Proin nec urna ac odio luctus eleifend aliquet quis diam. Cras nec nisl non eros interdum volutpat pulvinar nec lectus. Maecenas ultrices, nisi non suscipit blandit, sem diam lacinia enim, eget venenatis elit nibh at felis. Fusce fermentum lobortis nisi, sed porta urna venenatis eget. Maecenas magna erat, maximus elementum aliquet in, placerat sagittis erat. Aliquam pellentesque, felis sed ornare posuere, ante odio aliquam sem, quis pharetra erat ante eu augue. Integer tincidunt elit eu finibus ornare. Sed vel urna hendrerit, porta diam dignissim, condimentum urna. Quisque sit amet diam a lectus gravida fringilla. Etiam quis eros consectetur, faucibus libero ut, vestibulum dui. Phasellus in lectus sodales, volutpat urna nec, dictum elit. Nulla facilisi. Vestibulum efficitur metus a elit gravida vulputate. Suspendisse convallis quam justo, id imperdiet arcu accumsan a. Suspendisse eu egestas mauris, eget eleifend lorem.Integer facilisis porttitor metus, ut viverra arcu placerat vel. Maecenas fringilla dignissim felis id porttitor. Nulla turpis tellus, bibendum vel interdum sit amet, tincidunt sit amet orci. Duis a ligula vitae est fringilla semper. Maecenas fermentum commodo mauris eu porta. Nulla vel condimentum dui. Praesent lacus tortor, maximus sed condimentum eget, vehicula a dolor. Cras vitae felis metus. Sed leo neque, egestas vel odio quis, eleifend porttitor nunc. Maecenas volutpat tellus id nisi suscipit, at volutpat tortor semper. Morbi at augue quis nisi luctus aliquet. Donec dapibus volutpat ante, sit amet molestie nunc. Pellentesque quis malesuada nunc. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam ultrices nibh eget convallis bibendum. Aenean mauris nibh, efficitur vel nisi et, imperdiet vulputate sapien. Suspendisse hendrerit mattis lacus non porta. Ut sagittis, risus finibus vestibulum viverra, magna nisi dictum purus, vel aliquam urna nisl quis nisl. Duis viverra varius dui sit amet dapibus. Morbi bibendum diam id nunc posuere, in condimentum ligula tempor. Quisque sodales odio a risus lacinia, at rhoncus odio luctus. Vivamus placerat, mi quis vestibulum accumsan, arcu enim sodales diam, at condimentum felis nisl eget nunc. Donec quis suscipit ligula.', styles['Justify']))
+
         # create document
         doc.build(data, onFirstPage=self.pageNumber, onLaterPages=self.pageNumber)
         pdf = self.buffer.getvalue()
@@ -265,7 +323,7 @@ class PdfPrint:
                  Paragraph(str(complaint.priority), styles['Justify']),
                  Paragraph(complaint.member.user.first_name, styles['Justify']),
                  Paragraph(complaint.member.origin.name, styles['Justify']),
-                 Paragraph(complaint.member.role.name, styles['Justify'])])
+                 Paragraph(str(complaint.member.role), styles['Justify'])])
         # create table
         wh_table = Table(table_data)
         wh_table.hAlign = 'LEFT'
