@@ -1,4 +1,5 @@
 from django.db import models
+from django import forms
 from django.contrib.auth.models import User
 from django.forms import ModelForm, BooleanField, TextInput, PasswordInput, Select, RadioSelect, Textarea, CheckboxSelectMultiple, DateTimeInput, CheckboxInput, NumberInput
 from django.utils import timezone
@@ -23,18 +24,19 @@ class Location(models.Model):
         return '{}: {},{}'.format(self.name, self.lat, self.lon)
 
 class Origin(models.Model):
-    MASTER_ORIGIN = (
-        ('Pimpinan', 'Pimpinan'),
-        ('Unit', 'Unit ITB'),
-        ('Intern', 'Intern Direktorat Sarana dan Prasarana'),
-        ('Civitas', 'Civitas Akademik'),
-        ('Eksternal', 'Eksternal ITB (Masyarakat, Tamu, dan Umum)')
-    )
-    name = models.CharField(max_length=20, choices=MASTER_ORIGIN)
+    # MASTER_ORIGIN = (
+    #     ('Pimpinan', 'Pimpinan'),
+    #     ('Unit', 'Unit ITB'),
+    #     ('Intern', 'Intern Direktorat Sarana dan Prasarana'),
+    #     ('Civitas', 'Civitas Akademik'),
+    #     ('Eksternal', 'Eksternal ITB (Masyarakat, Tamu, dan Umum)')
+    # )
+    code = models.CharField(max_length=10)
+    name = models.CharField(max_length=50)
     def is_selected(self, name):
         return 'selected' if name == self.name else ''
     def __str__(self):
-        return dict(self.MASTER_ORIGIN)[self.name]
+        return self.name
     
 '''
 class InformerOrigin(models.Model):
@@ -67,59 +69,44 @@ class Informer(models.Model):
 '''
 
 class Division(models.Model):
-    DIVISIONS = (
-        ('PU', 'Perawatan Utilitas'),
-        ('PG', 'Perawatan Gedung'),
-        ('OG', 'Operasional dan Kebersihan Gedung'),
-        ('KS', 'Kebersihan dan Pengelolaan Sampah'),
-        ('IA', 'Inventarisasi Aset'),
-        ('PDA', 'Pendayagunaan Aset'),
-        ('PHA', 'Penghapusan Aset'),
-        ('PD', 'Penerimaan dan Distribusi'),
-        ('S', 'Sekretariat'),  
-    )
-    name = models.CharField(max_length=10, choices=DIVISIONS)
+    # DIVISIONS = (
+    #     ('PU', 'Perawatan Utilitas'),
+    #     ('PG', 'Perawatan Gedung'),
+    #     ('OG', 'Operasional dan Kebersihan Gedung'),
+    #     ('KS', 'Kebersihan dan Pengelolaan Sampah'),
+    #     ('IA', 'Inventarisasi Aset'),
+    #     ('PDA', 'Pendayagunaan Aset'),
+    #     ('PHA', 'Penghapusan Aset'),
+    #     ('PD', 'Penerimaan dan Distribusi'),
+    #     ('S', 'Sekretariat'),  
+    # )
+    code = models.CharField(max_length=10)
+    name = models.CharField(max_length=50)
 
     def __str__(self):
-        return dict(self.DIVISIONS)[self.name]
+        return self.name
 
 
 class Role(models.Model):
-    ROLES = (
-        ('PU', 'Perawatan Utilitas'),
-        ('PG', 'Perawatan Gedung'),
-        ('OG', 'Operasional dan Kebersihan Gedung'),
-        ('KS', 'Kebersihan dan Pengelolaan Sampah'),
-        ('IA', 'Inventarisasi Aset'),
-        ('PDA', 'Pendayagunaan Aset'),
-        ('PHA', 'Penghapusan Aset'),
-        ('PD', 'Penerimaan dan Distribusi'),
-        ('S', 'Sekretariat'),
-        ('D', 'Direktur'),
-        ('WD', 'Wakil Direktur'),
-        ('KAI', 'Kepala Subdit Pendayagunaan Aset dan Inventarisasi'),
-        ('KO', 'Kepala Subdit Operasional dan Kebersihan'),
-        ('KPA', 'Kepala Subdit Perawatan Aset'),
-        ('SA', 'Superadmin'),
-    )
-    name = models.CharField(max_length=10, choices=ROLES)
+    code = models.CharField(max_length=10)
+    name = models.CharField(max_length=50)
     divisions = models.ManyToManyField(Division)
+    origin = models.ForeignKey(Origin, on_delete=models.CASCADE)
 
     def __str__(self):
-        return dict(self.ROLES)[self.name]
+        return self.name
 
 
 class Member(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
-    origin = models.ForeignKey(Origin,on_delete=models.CASCADE)
     phone = models.CharField(max_length=20,default='')
     additional_division = models.ManyToManyField(Division)
     def __str__(self):
         return self.user.username
 
     def isSuperadmin(self):
-        return self.role.name == 'SA'
+        return self.role.code == 'SA'
 
     def isLeaderOf(self, complaint):
         return complaint.leader is None or complaint.leader in self.role.divisions.all()
@@ -230,28 +217,27 @@ class UserEditForm(ModelForm):
 class MemberEditForm(ModelForm):
     class Meta:
         model = Member
-        fields = ['role','origin','additional_division','phone']
+        fields = ['role','additional_division','phone']
         exclude=['user']
         widgets = {
             'phone': TextInput(attrs={'class': 'form-control'}),
-            'origin': Select(attrs={'class':'form-control'}),
             'role': Select(attrs={'class': 'form-control'}),
             'additional_division': CheckboxSelectMultiple(
-                choices=Division.objects.filter(name='OG'),
-                attrs={
-                    'style': 'margin-right: 10px'}),
+                choices=Division.objects.all(),
+                # attrs={
+                #     'style': 'margin-right: 10px'}),
+            )
         }
 
 class MemberCreateForm(ModelForm):
     class Meta:
         model = Member
-        fields = ['role','origin','phone']
+        fields = ['role','phone']
         exclude=['user']
         widgets = {
+            'role': Select(attrs={'class': 'form-control'}),            
             'phone': TextInput(attrs={'class': 'form-control'}),
-            'origin': Select(attrs={'class':'form-control'}),
-            'role': Select(attrs={'class': 'form-control'}),
-        }      
+        }    
 
 
 class ComplaintCreateForm(ModelForm):
@@ -417,6 +403,38 @@ class InformerOriginForm(ModelForm):
             'specific_origin': TextInput(attrs={'class': 'form-control'})
         }
 '''
+class ExternalUserOriginForm(ModelForm):
+    origin = forms.ModelChoiceField(queryset=Origin.objects.exclude(id=3), widget=forms.Select(attrs={'class': 'form-control'}))
+    class Meta:
+        model = Role
+        fields = ['name','origin']
+        exclude=['divisions','code']
+        widgets = {
+            'name': TextInput(attrs={'class': 'form-control'})
+        }
+
+class RoleForm(ModelForm):
+    class Meta:
+        model = Role
+        fields = ['code','name','divisions']
+        exclude = ['origin']
+        widgets = {
+            'code': TextInput(attrs={'class': 'form-control'}),
+            'name': TextInput(attrs={'class': 'form-control'}),
+            'divisions': CheckboxSelectMultiple(
+                choices=Division.objects.all(),
+                attrs={
+                    'style': 'margin-right: 10px'})
+        }
+
+class DivisionForm(ModelForm):
+    class Meta:
+        model = Division
+        fields = ['code','name']
+        widgets = {
+            'code': TextInput(attrs={'class': 'form-control','placeholder': 'kode'}),
+            'name': TextInput(attrs={'class': 'form-control','placeholder': 'nama divisi'})
+        }
 
 class LocationForm(ModelForm):
     class Meta:

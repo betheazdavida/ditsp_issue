@@ -3,120 +3,150 @@
     "model": "complaintManager.role",
     "pk": 1,
     "fields": {
-      "name": "PU",
-      "divisions": [1]
+      "code": "PU",
+      "name": "Perawatan Utilitas",
+      "divisions": [1],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 2,
     "fields": {
-      "name": "PG",
-      "divisions": [2]
+      "code": "PG",
+      "name": "Perawatan Gedung",
+      "divisions": [2],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 3,
     "fields": {
-      "name": "OG",
-      "divisions": [3]
+      "code": "OG",
+      "name": "Operasional dan Kebersihan Gedung",
+      "divisions": [3],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 4,
     "fields": {
-      "name": "KS",
-      "divisions": [4]
+      "code": "KS",
+      "name": "Kebersihan dan Pengelolaan Sampah",
+      "divisions": [4],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 5,
     "fields": {
-      "name": "IA",
-      "divisions": [5]
+      "code": "IA",
+      "name": "Inventarisasi Aset",
+      "divisions": [5],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 6,
     "fields": {
-      "name": "PDA",
-      "divisions": [6]
+      "code": "PDA",
+      "name": "Pendayagunaan Aset",
+      "divisions": [6],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 7,
     "fields": {
-      "name": "PHA",
-      "divisions": [7]
+      "code": "PHA",
+      "name": "Penghapusan Aset",
+      "divisions": [7],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 8,
     "fields": {
-      "name": "PD",
-      "divisions": [8]
+      "code": "PD",
+      "name": "Penerimaan dan Distribusi",
+      "divisions": [8],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 9,
     "fields": {
-      "name": "S",
-      "divisions": [9]
+      "code": "S",
+      "name": "Sekretariat",
+      "divisions": [9],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 10,
     "fields": {
-      "name": "D",
-      "divisions": [1,2,3,4,5,6,7,8,9]
+      "code": "D",
+      "name": "Direktur",
+      "divisions": [1,2,3,4,5,6,7,8,9],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 11,
     "fields": {
-      "name": "WD",
-      "divisions": [1,2,3,4,5,6,7,8,9]
+      "code": "WD",
+      "name": "Wakil DIrekur",
+      "divisions": [1,2,3,4,5,6,7,8,9],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 12,
     "fields": {
-      "name": "KAI",
-      "divisions": [5,6,7,8]
+      "code": "KAI",
+      "name": "Kepala Subdit Pendayagunaan Aset dan Inventarisasi",
+      "divisions": [5,6,7,8],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 13,
     "fields": {
-      "name": "KO",
-      "divisions": [3,4]
+      "code": "KO",
+      "name": "Kepala Subdit Operasional dan Kebersihan",
+      "divisions": [3,4],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 14,
     "fields": {
-      "name": "KPA",
-      "divisions": [1,2]
+      "code": "KPA",
+      "name": "Kepala Subdit Perawatan Aset",
+      "divisions": [1,2],
+      "origin_id":3
     }
   },
   {
     "model": "complaintManager.role",
     "pk": 15,
     "fields": {
-      "name": "SA",
-      "divisions": [1,2,3,4,5,6,7,8,9]
+      "code": "SA",
+      "name": "Superadmin",
+      "divisions": [1,2,3,4,5,6,7,8,9],
+      "origin_id":3
     }
   }
 ]

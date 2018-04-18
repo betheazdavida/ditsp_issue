@@ -12,7 +12,7 @@
 <div class="panel panel-default panel-light">
   <div class="panel-heading">
     <div class="row">
-           <div class="col-md-4">
+           <div class="col-md-2">
              <h4 clas="panel-title">Daftar Pengguna</h3>
            </div>
            <div class="col-md-4">
@@ -27,7 +27,20 @@
                  </div>
              </form>
            </div>
-           <div class="col-md-2"></div>
+           <div class="col-md-1 text-right">
+              <h4>Filter:</h4>
+            </div>
+            <div class="col-md-2">
+              <form id="origin">
+                <select class="form-control" name="category" onchange="$('#origin').submit()">
+                  <option value="Intern" {% if category == 'Intern' %} selected {% endif %}>Intern Direktorat Sarana dan Prasarana</option>
+                  <option value="Pimpinan" {% if category == 'Pimpinan' %} selected {% endif %}>Pimpinan</option>
+                  <option value="Unit" {% if category == 'Unit' %} selected {% endif %}>Unit ITB</option>
+                  <option value="Civitas" {% if category == 'Civitas' %} selected {% endif %}>Civitas Akademik</option>
+                  <option value="Eksternal" {% if category == 'Eksternal' %} selected {% endif %}>Eksternal ITB (Masyarakat, Tamu, dan Umum)</option>
+                </select>
+              </form>
+            </div>
            <div class="col-md-2">
              <a href="{% url 'complaintManager:user_create' %}"type="button" class="btn btn-success">+ Add User</a>
            </div>

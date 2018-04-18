@@ -107,7 +107,7 @@
           </td>
           <td class="contact-note">
             <strong>{% for division in complaint.assigned_divisions.all %}
-              {{ division.name }}{% if not forloop.last %}, {% endif %}
+              {{ division.code }}{% if not forloop.last %}, {% endif %}
             {% endfor %}</strong>
           </td>
             <td>

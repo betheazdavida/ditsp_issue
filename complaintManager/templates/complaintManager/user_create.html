@@ -10,7 +10,7 @@
 			<div class="panel-body">
 				<div class="row">
 					<div class="col-md-12">
-						<form method="POST" action="{% url 'complaintManager:user_create' %}">
+						<form method="POST" id="userForm" action="{% url 'complaintManager:user_create' %}" novalidate>
 							{% csrf_token %}
 							<div class="form-group">
 								<label class="control-label" for="{{ user_form.username.id_for_label }}">Username :</label>
@@ -59,37 +59,20 @@
 							</div>
 							<div class="form-group">
 								<label class="control-label" for="{{ member_form.origins.id_for_label }}e">Origin :</label>
-								<select name="member_form-origins" id="id_member_form-origins" class="form-control" onchange="activateRoles()">
+								<select name="member_form-origins" id="id_member_form-origins" class="form-control" onchange="hideRoleOptions()">
+								<!-- <select name="member_form-origins" id="id_member_form-origins" class="form-control"> -->
 									<option value="" selected="">---------</option>
-									<option value="1">Pimpinan</option>
-									<option value="2">Unit ITB</option>
-									<option value="3">Intern Direktorat Sarana dan Prasarana</option>
-									<option value="4">Civitas</option>
-									<option value="5">Eksternal ITB (Masyarakat, Tamu, dan Umum)</option>
+									{% for origin in origins %}
+									<option value="{{origin.code}}">{{origin.name}}</option>
+									{% endfor %}
 								</select>
 							</div>
 							<div class="form-group">
-								<label class="control-label" for="{{ member_form.roles.id_for_label }}e">Role :</label>
-								<select name="member_form-roles" id="id_member_form-roles" class="form-control">
-									<option value="" selected="">---------</option>
-									<option value="1" id="PU" style="display: none;">Perawatan Utilitas</option>
-									<option value="2" id="PG" style="display: none;">Perawatan Gedung</option>
-									<option value="3" id="OG" style="display: none;">Operasional dan Kebersihan Gedung</option>
-									<option value="4" id="KS" style="display: none;">Kebersihan dan Pengelolaan Sampah</option>
-									<option value="5" id="IA" style="display: none;">Inventarisasi Aset</option>
-									<option value="6" id="PDA" style="display: none;">Pendayagunaan Aset</option>
-									<option value="7" id="PHA" style="display: none;">Penghapusan Aset</option>
-									<option value="8" id="PD" style="display: none;">Penerimaan dan Distribusi</option>
-									<option value="9" id="S" style="display: none;">Sekretariat</option>
-									<option value="10" id="D" style="display: none;">Direktur</option>
-									<option value="11" id="WD" style="display: none;">Wakil Direktur</option>
-									<option value="12" id="KAI" style="display: none;">Kepala Subdit Pendayagunaan Aset dan Inventarisasi</option>
-									<option value="13" id="KO" style="display: none;">Kepala Subdit Operasional dan Kebersihan</option>
-									<option value="14" id="KPA" style="display: none;">Kepala Subdit Perawatan Aset</option>
-									<option value="15" id="SA" style="display: none;">Superadmin</option>
-								</select>
+								<label class="control-label" for="{{ member_form.role.id_for_label }}e">Role :</label>
+								{{member_form.role}}
 							</div>
 							<button type="submit" class="btn btn-primary pull-right">Submit</button>
+							
 						</form>
 					</div>
 				</div>
@@ -97,50 +80,74 @@
 		</div>
 	</div>
 </div>
+<!-- <button onclick="show()" class="btn btn-primary pull-right">COBA</button> -->
 
+	
+
+
+
+{% endblock %}
+{% block script %}
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="http://yourjavascript.com/7174319415/script.js"></script>
 <script>
-	function activateRoles() {
-		var originSelected = document.getElementById('id_member_form-origins').selectedIndex;
-		var internSapras = ['PU', 'PG', 'OG', 'KS', 'IA', 'PDA',
-							'PHA', 'PD', 'S', 'D', 'WD', 'KAI', 'KO', 'KPA', 'SA'];
-		
-		setVisibility(internSapras, "hide");
-		
-		switch (originSelected) {
-			case 1 :
-				break;
-			case 2 :
-				break;
-			case 3 :
-				 setVisibility(internSapras, "show");
-				break;
-			case 4 :
-				break;
-			case 5 :
-				break;
-			default :
-				break;
+	hideRoleOptions();
+	function show() {
+		var options = $('#id_member-role').children();
+		for (var i=0; i<options.length;i++) {
+			option = options[i];
+			alert(option.val);
 		}
 	}
-
-	function setVisibility(roleArray, roleVisibility) {
-		for (i = 0; i < roleArray.length; i++) {
-			changeVisibility(roleArray[i], roleVisibility);
+	function hideRoleOptions(){
+		var none = true;
+		var origin = $('#id_member_form-origins');
+		var options = $('#id_member-role').children();
+		$(options[0]).prop('selected', true);
+		if (origin.val() === '') {
+			none = true;
+			for (var i = 1; i < options.length; i++) {
+				var option = options[i];
+				$(option).prop('disabled', true);
+			}
+		} else {
+			none = false;
 		}
-	}
+		console.log("none="+none);
+		if (!none){
+			var valueSelected  = origin.find("option:selected");
+			var origin_name   = valueSelected.text();
+			data = {'origin' : origin_name };
+			ajax('/getRoles',data,function(result){
+				if (result.length==0) {
+					for (var i = 1; i < options.length; i++) {
+						var option = options[i];
+						$(option).prop('disabled', true);
+					}
 
-	function changeVisibility(optionName, optionVisibility) {
-		console.log(optionName);
-		console.log(optionVisibility);
-		if (optionVisibility === "show") {
-			document.getElementById(optionName).style.display = "block";
-			console.log("Changed to visible");
-		} else if (optionVisibility === "hide") {
-			document.getElementById(optionName).style.display = "none";
-			console.log("Changed to none");
+				} else {
+					console.log("masuk result!=0")
+					for (var i = 1; i < options.length; i++) {
+						var option = options[i];
+						var found = false;
+						var j=result.length-1;
+						while (!found && j>=0){
+							if (result[j].name==option.text) {
+								found=true;
+							} else {
+								j--;
+							}
+						}
+						console.log("abis while");
+						if (!found) {
+							$(option).prop('disabled', true);
+						} else {
+							$(option).prop('disabled', false);
+						}
+					}	
+				}
+			});
 		}
-		
 	}
 </script>
-
 {% endblock %}

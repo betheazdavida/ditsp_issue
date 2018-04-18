@@ -23,7 +23,6 @@
     "fields": {
       "role": 15,
       "user": 1,
-      "origin":3,
       "phone": "123"
     }
 }

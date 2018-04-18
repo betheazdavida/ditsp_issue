@@ -3,6 +3,7 @@
       "model": "complaintManager.origin",
       "pk": 1,
       "fields": {
+        "code": "Pimpinan",
         "name": "Pimpinan"
       }
     },
@@ -10,28 +11,32 @@
       "model": "complaintManager.origin",
       "pk": 2,
       "fields": {
-        "name": "Unit"
+        "code": "Unit",
+        "name": "Unit ITB"
       }
     },
     {
       "model": "complaintManager.origin",
       "pk": 3,
       "fields": {
-        "name": "Intern"
+        "code": "Intern",
+        "name": "Intern Direktorat Sarana dan Prasarana"
       }
     },
     {
       "model": "complaintManager.origin",
       "pk": 4,
       "fields": {
-        "name": "Civitas"
+        "code": "Civitas",
+        "name": "Civitas Akademik"
       }
     },
     {
       "model": "complaintManager.origin",
       "pk": 5,
       "fields": {
-        "name": "Eksternal"
+        "code": "Eksternal",
+        "name": "Eksternal ITB (Masyarakat, Tamu, Umum)"
       }
     }
   ]
