@@ -313,6 +313,9 @@ def complaint_edit(request, pk):
             complaint = complaint_form.save(commit=False)
             complaint.save()
             complaint_form.save_m2m()
+            change = ""
+            old = ""
+            new = ""
             if old_complaint.title != new_complaint.title:
                 old = old_complaint.title
                 new = new_complaint.title
@@ -337,8 +340,8 @@ def complaint_edit(request, pk):
                 old = old_complaint.reported
                 new = new_complaint.reported
                 change = "Waktu"
-            if old_complaint.status == new_complaint.status:
-                complaint.log_change(request.user, 'AC', change + ' diubah dari "' + old + '" menjadi "' + new + '" oleh '+ request.user.username)
+            if old_complaint.status == new_complaint.status and change != "":
+                complaint.log_change(str(request.user), 'AC', change + ' diubah dari "' + old + '" menjadi "' + new + '" oleh '+ request.user.username)
 
             if complaint_was_finished and complaint.status != 'F':
                 complaint.log_change(
