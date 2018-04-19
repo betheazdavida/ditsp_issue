@@ -12,6 +12,7 @@ from xhtml2pdf import pisa
 from django.template.loader import render_to_string
 from django.template.loader import get_template
 from django.template import Context
+from .pdf_utils import PdfPrint
 from django.http import HttpResponse
 from cgi import escape
 try:
@@ -137,13 +138,18 @@ def laporan(request):
             download_dir = os.path.join(filename)
             return download(request, download_dir)
         else:
-            return render_to_pdf(
-                'complaintManager/keluhan_pdf.html',dict(
-                {
-                    'pagesize': 'A4',
-                    'complaints': last_complaints,
-                })
-            )
+            response = HttpResponse(content_type='application/pdf')
+            start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").strftime("%d-%m-%Y")
+            end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").strftime("%d-%m-%Y")
+            filename = 'Laporan Penanganan Keluhan'
+            dateduration = 'Jangka Waktu: ' + start_date + ' s.d. ' + end_date
+            response['Content-Disposition'] = \
+                'attachment; filename={0}.pdf'.format(filename)
+            buffer = BytesIO()
+            report = PdfPrint(buffer, 'A4')
+            pdf = report.collective_report(last_complaints, filename, dateduration)
+            response.write(pdf)
+            return response
     else:
         template = 'complaintManager/index.html'
         return render(request, template)
@@ -271,16 +277,18 @@ def complaint_create_public(request):
 @login_required
 def complaint_download(request, pk):
     complaint = get_object_or_404(Complaint, pk=pk)
-    return download_to_pdf(
-        'complaintManager/complaint_print.html', dict(
-            {
-                'pagesize': 'A4',
-                'complaint': complaint,
-            })
-    )
+
+    response = HttpResponse(content_type='application/pdf')
+    filename = 'Laporan Penanganan Keluhan \'' + complaint.title + '\''
+    response['Content-Disposition'] = \
+        'attachment; filename={0}.pdf'.format(filename)
+    buffer = BytesIO()
+    report = PdfPrint(buffer, 'A4')
+    pdf = report.individual_report(complaint, filename)
+    response.write(pdf)
+    return response
 
 def download_to_pdf(template_src, context_dict):
-    template = get_template(template_src)
     html  = template.render(context_dict)
     result = BytesIO()
 
