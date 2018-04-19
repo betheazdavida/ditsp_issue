@@ -1,8 +1,9 @@
-Tanggal,Deskripsi,Status,Divisi Yang Mengerjakan,Prioritas,Pemberi Keluhan,Asal Instansi Pelapor,Asal Pelapor (Spesifik)
-2018-04-16 18:40:19+00:00,asdsaf,S,"Operasional dan Kebersihan Gedung,Kebersihan dan Pengelolaan Sampah",1,Sumiatun,Intern Direktorat Sarana dan Prasarana,Superadmin
-2018-04-16 18:46:49+00:00,asa,S,"Perawatan Gedung,Operasional dan Kebersihan Gedung,Kebersihan dan Pengelolaan Sampah",1,Sumiatun,Intern Direktorat Sarana dan Prasarana,Superadmin
-2018-04-18 06:38:38+00:00,asa,S,"Penghapusan Aset,Penerimaan dan Distribusi",1,Sumiatun,Intern Direktorat Sarana dan Prasarana,Superadmin
-2018-04-18 08:05:44+00:00,sadsa,S,,1,Sumiatun,Intern Direktorat Sarana dan Prasarana,Superadmin
-2018-04-18 08:06:25+00:00,aasfsdf,S,,1,Sumiatun,Intern Direktorat Sarana dan Prasarana,Superadmin
-2018-04-18 08:15:15+00:00,asasasa,S,,1,Sumiatun,Intern Direktorat Sarana dan Prasarana,Superadmin
-2018-04-18 08:16:10+00:00,sdsa,S,,1,Sumiatun,Intern Direktorat Sarana dan Prasarana,Superadmin
+Tanggal;Deskripsi;Status;Divisi Yang Mengerjakan;Prioritas;Pemberi Keluhan;Asal Instansi Pelapor;Asal Pelapor (Spesifik)
+2018-04-16 18:40:19+00:00;asdsaf;S;Operasional dan Kebersihan Gedung,Kebersihan dan Pengelolaan Sampah;1;Sumiatun;Intern Direktorat Sarana dan Prasarana;Superadmin
+2018-04-16 18:46:49+00:00;asa;S;Perawatan Gedung,Operasional dan Kebersihan Gedung,Kebersihan dan Pengelolaan Sampah;1;Sumiatun;Intern Direktorat Sarana dan Prasarana;Superadmin
+2018-04-18 06:38:38+00:00;asa;S;Penghapusan Aset,Penerimaan dan Distribusi;1;Sumiatun;Intern Direktorat Sarana dan Prasarana;Superadmin
+2018-04-18 08:05:44+00:00;sadsa;S;;1;Sumiatun;Intern Direktorat Sarana dan Prasarana;Superadmin
+2018-04-18 08:06:25+00:00;aasfsdf;S;;1;Sumiatun;Intern Direktorat Sarana dan Prasarana;Superadmin
+2018-04-18 08:15:15+00:00;asasasa;S;;1;Sumiatun;Intern Direktorat Sarana dan Prasarana;Superadmin
+2018-04-18 08:16:10+00:00;sdsa;S;;1;Sumiatun;Intern Direktorat Sarana dan Prasarana;Superadmin
+2018-04-19 16:09:02+00:00;afsfsafsa;S;Perawatan Utilitas,Perawatan Gedung,Operasional dan Kebersihan Gedung,Kebersihan dan Pengelolaan Sampah,Inventarisasi Aset,Pendayagunaan Aset,Penghapusan Aset,Penerimaan dan Distribusi,Sekretariat;1;Sumiatun;Intern Direktorat Sarana dan Prasarana;Superadmin
