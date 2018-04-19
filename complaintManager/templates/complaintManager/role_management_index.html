@@ -1,0 +1,152 @@
+{% extends "complaintManager/base.html" %}
+
+{% block content %}
+<form class="search-input">
+    <div class="input-group col-md-12">
+        <input type="text" class="form-control" name="q" value="{{q}}" placeholder="Insert your search keyword" />
+        <span class="input-group-btn">
+            <button class="btn btn-info" type="submit">
+                <i class="glyphicon glyphicon-search"></i>
+            </button>
+        </span>
+    </div>
+</form>
+<br>
+<div class="panel panel-default panel-light">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="col-md-4">
+        <h4 clas="panel-title">Manajemen Divisi dan Role Sarpras</h3>
+      </div>
+      <div class="col-md-2">
+        <a href="{% url 'complaintManager:role_management_add' %}"type="button" class="btn btn-success">+ Tambah Role</a>
+      </div>
+    </div>
+  </div>
+  <div class="panel-body nopadding">
+          <div class="col-md-6">
+              <div class="panel-body nopadding">
+                <h4>Daftar Role</h4>
+                <table class="table table-condensed table-hover summary-report">
+                  <tbody id="summary_report">
+                    <tr>
+                      <th>Kode</th>
+                      <th>Role</th>
+                      <th>Akses Divisi</th>
+                      <th>Edit</th>
+                      <th>Delete</th>
+                    </tr>
+                    {% for role in roles %}
+                      <tr>
+                        {% csrf_token %}  
+                        <td>
+                            <span id="role-code-{{role.pk}}">{{ role.code }}</span>
+                        </td>
+                        <td>
+                          <span id="role-name-{{role.pk}}">{{ role.name }}</span>
+                        </td>
+                        <td>
+                            <span>{% for division in role.divisions.all %}
+                                {{ division.code }}{% if not forloop.last %}, {% endif %}
+                              {% endfor %}</span>
+                          </td>
+                        <td>
+                          <a href="{% url 'complaintManager:role_management_edit' role.pk %}" class="btn btn-primary">Edit</a>
+                        </td>
+                        </form>
+                        <td>
+                          <form method="POST" action="{% url 'complaintManager:role_management_delete' role.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                      </tr>
+                    
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel-body nopadding">
+                  <h4>Daftar Divisi</h4>
+                  <table class="table table-condensed table-hover summary-report">
+                    <tbody id="summary_report">
+                      <tr>
+                        <th class="col-md-2">Kode</th>
+                        <th>Divisi</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                      </tr>
+                      {% for division in divisions %}
+                        <tr>
+                          <form id="edit-origin-form" method="POST" action="{% url 'complaintManager:division_edit' division.pk%}">
+                          {% csrf_token %}  
+                          <td>
+                              <span id="division-code-{{division.pk}}">{{ division.code }}</span>
+                              <span id="division-code-form-{{division.pk}}" style="display:none" >{{ division_form.code }}</span>
+                          </td>
+                          <td>
+                            <span id="division-name-{{division.pk}}">{{ division.name }}</span>
+                            <span id="division-name-form-{{division.pk}}" style="display:none" >{{ division_form.name }}</span>
+                          </td>
+                          <td>
+                            <button id="edit-{{division.pk}}"  action="{% url 'complaintManager:division_edit' division.pk%}" class="btn btn-primary edit-btn">Edit</button>
+                            <button id="save-{{division.pk}}" type=submit class="btn btn-success save-btn" style="display: none">Save</button>
+                          </td>
+                          </form>
+                          <td>
+                            <form method="POST" action="{% url 'complaintManager:division_delete' division.pk %}">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                      
+                    </tbody>
+                  </table>
+                  <table class="table table-condensed table-hover summary-report">
+                    <form method="POST" action="{% url 'complaintManager:division_add' %}">
+                    {% csrf_token %} 
+                    <tbody id="summary_report">
+                        <tr>
+                            <td class="col-md-2">
+                              {{division_form.code}}
+                            </td>
+                            <td>
+                              {{division_form.name}}
+                            </td>
+                            <td>
+                                <button class="btn btn-success">Tambah</button>
+                            </td>
+                          </tr>
+                      </tbody>
+                      </form>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+  </div>
+  {% endblock %}
+</div>
+
+
+
+
+{% block script %}
+<script>
+  $('.edit-btn').click(function() {
+    var id = $(this)[0].id.split("-")[1]
+    $('#division-code-form-' + id).show();
+    $('#division-code-form-' + id +' #id_code').val($('#division-code-' + id).html());
+    $('#division-name-form-' + id).show();
+    // $('#division-name-form-' + id +' #id_name').val($('#division-name-' + id).html());
+    $('#save-' + id).show();
+    $('#division-code-' + id).hide();
+    $('#division-name-' + id).hide();
+    $('#edit-' + id).hide();
+  });
+</script>
+{% endblock %}

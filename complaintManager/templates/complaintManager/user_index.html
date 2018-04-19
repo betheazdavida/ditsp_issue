@@ -9,10 +9,12 @@
   </center>
   {% endfor %}
 {% endif %}
+<div class="row">
+    <div class="col-md-12">
 <div class="panel panel-default panel-light">
   <div class="panel-heading">
     <div class="row">
-           <div class="col-md-4">
+           <div class="col-md-3">
              <h4 clas="panel-title">Daftar Pengguna</h3>
            </div>
            <div class="col-md-4">
@@ -27,7 +29,20 @@
                  </div>
              </form>
            </div>
-           <div class="col-md-2"></div>
+           <div class="col-md-1 text-right">
+              <h4>Filter:</h4>
+            </div>
+            <div class="col-md-2">
+              <form id="origin">
+                <select class="form-control" name="category" onchange="$('#origin').submit()">
+                  <option value="Intern" {% if category == 'Intern' %} selected {% endif %}>Intern Direktorat Sarana dan Prasarana</option>
+                  <option value="Pimpinan" {% if category == 'Pimpinan' %} selected {% endif %}>Pimpinan</option>
+                  <option value="Unit" {% if category == 'Unit' %} selected {% endif %}>Unit ITB</option>
+                  <option value="Civitas" {% if category == 'Civitas' %} selected {% endif %}>Civitas Akademik</option>
+                  <option value="Eksternal" {% if category == 'Eksternal' %} selected {% endif %}>Eksternal ITB (Masyarakat, Tamu, dan Umum)</option>
+                </select>
+              </form>
+            </div>
            <div class="col-md-2">
              <a href="{% url 'complaintManager:user_create' %}"type="button" class="btn btn-success">+ Add User</a>
            </div>
@@ -41,7 +56,8 @@
           <th>Email</th>
           <th>Nama</th>
           <th>Role</th>
-          <th></th>
+          <th>Phone</th>
+          <th colspan="2"></th>
         </tr>
         {% for user in users %}
         <tr>
@@ -52,13 +68,19 @@
           <td>{{ user.member.phone }}</td>
           <td>
             <a href="{% url 'complaintManager:user_edit' user.pk %}" class="btn btn-primary">Edit</a>
+          </td>
+          <td>
             <button id='{{ user.pk }}-{{ user.username }}'class="btn btn-danger user-delete-btn" data-toggle="modal" data-target="#myModal">Delete</button>
+          </td>
           </td>
         </tr>
         {% endfor %}
+        
       </tbody>
     </table>
   </div>
+</div>
+</div>
 </div>
 
 <!-- Modal -->

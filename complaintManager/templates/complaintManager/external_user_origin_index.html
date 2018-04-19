@@ -1,0 +1,137 @@
+{% extends "complaintManager/base.html" %}
+
+{% block content %}
+<form class="search-input">
+    <div class="input-group col-md-12">
+        <input type="text" class="form-control" name="q" value="{{q}}" placeholder="Insert your search keyword" />
+        <span class="input-group-btn">
+            <button class="btn btn-info" type="submit">
+                <i class="glyphicon glyphicon-search"></i>
+            </button>
+        </span>
+    </div>
+</form>
+<br>
+<div class="panel panel-default panel-light">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="col-md-4">
+        <h4 clas="panel-title">Pengguna Eksternal Sarpras</h3>
+      </div>
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-1 text-right">
+        <h4>Filter:</h4>
+      </div>
+      <div class="col-md-2">
+        <form id="master_origin">
+          <select class="form-control" name="category" onchange="$('#master_origin').submit()">
+            <option value="" {% if category == '' %} selected {% endif %}>All</option>
+            <option value="Pimpinan" {% if category == 'Pimpinan' %} selected {% endif %}>Pimpinan</option>
+            <option value="Unit" {% if category == 'Unit' %} selected {% endif %}>Unit ITB</option>
+            <option value="Civitas" {% if category == 'Civitas' %} selected {% endif %}>Civitas Akademik</option>
+            <option value="Eksternal" {% if category == 'Eksternal' %} selected {% endif %}>Eksternal ITB (Masyarakat, Tamu, dan Umum)</option>
+          </select>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="panel-body nopadding">
+    <div class="col-md-8">
+      <table class="table table-condensed table-hover summary-report">
+        <tbody id="summary_report">
+          <tr>
+            <th>Kategori Asal</th>
+            <th>Detail Asal</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+          {% for role in roles %}
+            <tr>
+              <form id="edit-origin-form" method="POST" action="{% url 'complaintManager:external_user_origin_edit' role.pk%}">
+              {% csrf_token %}  
+                <td class="{{role.origin.name}}">
+                <span id="origin-{{role.pk}}">{{ role.origin.code }}</span>
+                <span id="origin-form-{{role.pk}}" style="display:none" >{{ form.origin }}</span>
+                <!-- <select class="form-control" id="edit-origin-{{role.pk}}" style="display: none">
+                  <option value="Pimpinan">Pimpinan</option>
+                  <option value="Unit">Unit ITB</option>
+                  <option value="Intern">Intern Direktorat Sarana dan Prasarana</option>
+                  <option value="Civitas">Civitas Akademik</option>
+                  <option value="Eksternal">Eksternal ITB (Masyarakat, Tamu, dan Umum)</option>
+                </select> -->
+              </td>
+              <td>
+                <span id="role-{{role.pk}}">{{ role.name }}</span>
+                <span id="role-form-{{role.pk}}" style="display:none">{{ form.name }}</span>
+                <!-- <input style="display: none" class="form-control" id="edit-role-{{role.pk}}" maxlength="20" type="text" value="{{role.name}}"> -->
+              </td>
+              <td>
+                <button id="edit-{{role.pk}}"  action="{% url 'complaintManager:external_user_origin_edit' role.pk%}" class="btn btn-primary edit-btn">Edit</button>
+                <button id="save-{{role.pk}}" type=submit class="btn btn-success save-btn" style="display: none">Save</button>
+              </td>
+              </form>
+              <td>
+                <form method="POST" action="{% url 'complaintManager:external_user_origin_delete' role.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </td>
+            </tr>
+          
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-4">
+        <h4>Tambah Asal Pelapor Eksternal</h4>
+        <br>
+        <form method="POST" action="{% url 'complaintManager:external_user_origin_add' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="control-label" for="{{ user_form.origin.id_for_label }}">Kategori:</label>
+            {{ form.origin }}
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="{{ user_form.role.id_for_label }}">Pekerjaan/Jabatan:</label>
+            {{ form.name }}
+          </div>
+          <button class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+  </div>
+
+</div>
+
+
+<!-- <form id="edit-origin-form" method="POST" action="{% url 'complaintManager:external_user_origin_edit' 2%}" style="display: none">
+  {% csrf_token %}
+  {{ form.name }}
+  {{ form.origin }}
+  <button class="btn btn-primary">Submit</button>
+</form> -->
+{% endblock %}
+
+{% block script %}
+<script>
+  $('.edit-btn').click(function() {
+    var id = $(this)[0].id.split("-")[1]
+    $('#role-form-' + id).show();
+    $('#role-form-' + id +' #id_name').val($('#role-' + id).html());
+    $('#origin-form-' + id).show();
+    $('#origin-form-' + id +' #id_origin').val($('#origin-' + id).html());
+    $('#save-' + id).show();
+    $('#origin-' + id).hide();
+    $('#role-' + id).hide();
+    $('#edit-' + id).hide();
+  });
+
+  // $('.save-btn').click(function() {
+  //   var id = $(this)[0].id.split("-")[1]
+  //   $('#edit-origin-form').attr('action', '/external_user_origin/' + id + '/edit')
+  //   $('#edit-origin-form #id_origin').val($('#edit-origin-' + id).val())
+  //   $('#edit-origin-form #id_role').val($('#edit-role-' + id).val())
+  //   $('#edit-origin-form').submit()
+  // })
+</script>
+{% endblock %}
