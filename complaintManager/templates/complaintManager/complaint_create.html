@@ -105,7 +105,7 @@
 	addCheckBoxOnChange();
 	function addCheckBoxOnChange() {
 		var options = $('input[type=checkbox]');
-		for (var i = 1; i < options.length; i++) {
+		for (var i = 0; i < options.length; i++) {
 			var option = options[i];
 			console.log(option.value);
 			option.onchange = function(e){
@@ -137,56 +137,57 @@
 			}
 		}
 	}
-	// hideRoleOptions();
-	function hideDivisionOptions(){
-		var none = true;
-		var origin = $('#id_member_form-origins');
-		var options = $('#id_member-role').children();
-		$(options[0]).prop('selected', true);
-		if (origin.val() === '') {
-			none = true;
-			for (var i = 1; i < options.length; i++) {
-				var option = options[i];
-				$(option).prop('disabled', true);
-			}
-		} else {
-			none = false;
-		}
-		console.log("none="+none);
-		if (!none){
-			var valueSelected  = origin.find("option:selected");
-			var origin_name   = valueSelected.text();
-			data = {'origin' : origin_name };
-			ajax('/getRoles',data,function(result){
-				if (result.length==0) {
-					for (var i = 1; i < options.length; i++) {
-						var option = options[i];
-						$(option).prop('disabled', true);
-					}
-				} else {
-					console.log("masuk result!=0")
-					for (var i = 1; i < options.length; i++) {
-						var option = options[i];
-						var found = false;
-						var j=result.length-1;
-						while (!found && j>=0){
-							if (result[j].name==option.text) {
-								found=true;
-							} else {
-								j--;
-							}
-						}
-						console.log("abis while");
-						if (!found) {
-							$(option).prop('disabled', true);
-						} else {
-							$(option).prop('disabled', false);
-						}
-					}	
-				}
-			});
-		}
-	}
+	// // hideRoleOptions();
+	// function hideDivisionOptions(){
+	// 	var none = true;
+	// 	var origin = $('#id_member_form-origins');
+	// 	var options = $('#id_member-role').children();
+	// 	$(options[0]).prop('selected', true);
+	// 	if (origin.val() === '') {
+	// 		none = true;
+	// 		for (var i = 1; i < options.length; i++) {
+	// 			var option = options[i];
+	// 			$(option).prop('disabled', true);
+	// 		}
+	// 	} else {
+	// 		none = false;
+	// 	}
+	// 	console.log("none="+none);
+	// 	if (!none){
+	// 		var valueSelected  = origin.find("option:selected");
+	// 		var origin_name   = valueSelected.text();
+	// 		data = {'origin' : origin_name };
+	// 		ajax('/getRoles',data,function(result){
+	// 			if (result.length==0) {
+	// 				console.log(result.length);
+	// 				for (var i = 1; i < options.length; i++) {
+	// 					var option = options[i];
+	// 					$(option).prop('disabled', true);
+	// 				}
+	// 			} else {
+	// 				console.log("masuk result!=0")
+	// 				for (var i = 1; i < options.length; i++) {
+	// 					var option = options[i];
+	// 					var found = false;
+	// 					var j=result.length-1;
+	// 					while (!found && j>=0){
+	// 						if (result[j].name==option.text) {
+	// 							found=true;
+	// 						} else {
+	// 							j--;
+	// 						}
+	// 					}
+	// 					console.log("abis while");
+	// 					if (!found) {
+	// 						$(option).prop('disabled', true);
+	// 					} else {
+	// 						$(option).prop('disabled', false);
+	// 					}
+	// 				}	
+	// 			}
+	// 		});
+	// 	}
+	// }
 </script>
 
 <script>
