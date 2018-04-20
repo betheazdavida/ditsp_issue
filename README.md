@@ -4,6 +4,9 @@
 
 1. Run these commands:
 ```
+migration.sh
+```
+```
 python manage.py makemigrations
 python manage.py migrate
 python manage.py loaddata division_seed.json

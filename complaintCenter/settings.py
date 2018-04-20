@@ -33,7 +33,8 @@ SECRET_KEY = production_secrets.get(
     '9_v_rzow!4)1f!q&6q1d&)_@5vss1dnccc^sp$7#!6vr2cgk4s')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not IS_PRODUCTION
+# DEBUG = not IS_PRODUCTION
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost', '167.205.35.108', 'pplk2a.if.itb.ac.id']
 
