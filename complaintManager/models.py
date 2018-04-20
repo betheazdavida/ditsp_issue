@@ -223,7 +223,7 @@ class MemberEditForm(ModelForm):
             'phone': TextInput(attrs={'class': 'form-control'}),
             'role': Select(attrs={'class': 'form-control'}),
             'additional_division': CheckboxSelectMultiple(
-                choices=Division.objects.all(),
+                # choices=Division.objects.all(),
                 # attrs={
                 #     'style': 'margin-right: 10px'}),
             )
@@ -422,7 +422,7 @@ class RoleForm(ModelForm):
             'code': TextInput(attrs={'class': 'form-control'}),
             'name': TextInput(attrs={'class': 'form-control'}),
             'divisions': CheckboxSelectMultiple(
-                choices=Division.objects.all(),
+                # choices=Division.objects.all(),
                 attrs={
                     'style': 'margin-right: 10px'})
         }
