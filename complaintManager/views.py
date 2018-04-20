@@ -516,11 +516,13 @@ def complaint_list(request):
     desired_end_date = request.GET.get('end_date')
     if desired_start_date:
         complaints_unpaginated = complaints_unpaginated.filter(
-            Q(reported__gt=desired_start_date)
+            Q(reported__gte=desired_start_date)
         )
     if desired_end_date:
+        desired_end_date = desired_end_date + ' 23:59:59'
+        print("Date is " + str(desired_end_date))
         complaints_unpaginated = complaints_unpaginated.filter(
-            Q(reported__lt=desired_end_date)
+            Q(reported__lte=desired_end_date)
         )
 
     orderings = {
@@ -608,11 +610,13 @@ def complaint_list_out(request):
     desired_end_date = request.GET.get('end_date')
     if desired_start_date:
         complaints_unpaginated = complaints_unpaginated.filter(
-            Q(reported__gt=desired_start_date)
+            Q(reported__gte=desired_start_date)
         )
     if desired_end_date:
+        desired_end_date = desired_end_date + ' 23:59:59'
+        print("Date is " + str(desired_end_date))
         complaints_unpaginated = complaints_unpaginated.filter(
-            Q(reported__lt=desired_end_date)
+            Q(reported__lte=desired_end_date)
         )
 
     orderings = {
