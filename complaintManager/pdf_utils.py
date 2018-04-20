@@ -210,12 +210,12 @@ class PdfPrint:
         table_data.append(
             ['Kategori Sumber Pelapor', ': ' + str(complaint.member.role)])
         table_data.append(
-            ['Rincian Pelapor', ': ' + str(complaint.member.origin)])
+            ['Rincian Pelapor', ': ' + str(complaint.member.role.origin)])
         table_data.append(
             ['Judul Keluhan', ': ' + complaint.title])
         divisi_list = []
         for division in complaint.assigned_divisions.all():
-            divisi_list.append(division.name)
+            divisi_list.append(division.code)
         divisi_string = ", ".join(divisi_list)
         table_data.append(
             ['Jenis Keluhan', ': ' + divisi_string])
@@ -321,7 +321,7 @@ class PdfPrint:
             # add a row to table
             divisi_list = []
             for division in complaint.assigned_divisions.all():
-                divisi_list.append(division.name)
+                divisi_list.append(division.code)
             divisi_string = ", ".join(divisi_list)
             if (complaint.status == 'S'):
                 status = 'Dilaporkan'
@@ -336,7 +336,7 @@ class PdfPrint:
                  Paragraph(divisi_string, styles['Justify']),
                  Paragraph(str(complaint.priority), styles['Justify']),
                  Paragraph(complaint.member.user.first_name, styles['Justify']),
-                 Paragraph(complaint.member.origin.name, styles['Justify']),
+                 Paragraph(complaint.member.role.origin.name, styles['Justify']),
                  Paragraph(str(complaint.member.role), styles['Justify'])])
         # create table
         wh_table = Table(table_data)
@@ -353,8 +353,7 @@ class PdfPrint:
         divtable_data = []
         for division in divisions:
             divtable_data.append(
-                [division.name, ': '+ division.name])
-                # [division.code, ': '+ division.name])
+                [division.code, ': '+ division.name])
         # create document
         div_table = Table(divtable_data)
         div_table.hAlign = 'LEFT'

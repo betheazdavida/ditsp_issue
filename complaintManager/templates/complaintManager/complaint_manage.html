@@ -42,19 +42,19 @@
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="origin">Kategori Sumber</label>
-                    <p class="form-control" id="email" disabled>{{complaint.member.origin}}</p>
+                    <p class="form-control" id="origin" disabled>{{complaint.member.role.origin}}</p>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="role">Rincian</label>
-                    <p class="form-control" id="email" disabled>{{complaint.member.role}}</p>
+                    <p class="form-control" id="role" disabled>{{complaint.member.role}}</p>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="title">Judul Keluhan</label>
-                    <p class="form-control" id="taitle" disabled>{{complaint.title}}</p>
+                    <p class="form-control" id="title" disabled>{{complaint.title}}</p>
                   </div>
                   <div class="form-group">
                     <label class="control-label" for="complaint-type">Jenis Keluhan</label>
-                    <p class="form-control" id="sel1" disabled>{% for division in complaint.assigned_divisions.all %}
+                    <p class="form-control" id="complaint-type" disabled>{% for division in complaint.assigned_divisions.all %}
                       {{ division.name }}{% if not forloop.last %}, {% endif %}
                     {% endfor %}</p>
                   </div>

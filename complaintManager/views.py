@@ -111,7 +111,7 @@ def laporan(request):
             # make the csv file
             filename = 'laporan_detail.csv'
             with open(filename, 'w', newline='') as csvfile:
-                writer = csv.writer(csvfile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                writer = csv.writer(csvfile, delimiter=';', quoting=csv.QUOTE_MINIMAL)
                 #Create field name
                 writer.writerow(['Tanggal', 'Deskripsi', 'Status', 'Divisi Yang Mengerjakan',
                     'Prioritas', 'Pemberi Keluhan', 'Asal Instansi Pelapor',
@@ -125,8 +125,8 @@ def laporan(request):
                     list.append(complaint.status)
                     divisi_list = []
                     for division in complaint.assigned_divisions.all():
-                        divisi_list.append(division.name)
-                    divisi_string = ",".join(divisi_list)
+                        divisi_list.append(division.code)
+                    divisi_string = ", ".join(divisi_list)
                     list.append(divisi_string)
                     list.append(complaint.priority)
                     list.append(complaint.member.user.first_name)
@@ -313,6 +313,9 @@ def complaint_edit(request, pk):
             complaint = complaint_form.save(commit=False)
             complaint.save()
             complaint_form.save_m2m()
+            change = ""
+            old = ""
+            new = ""
             if old_complaint.title != new_complaint.title:
                 old = old_complaint.title
                 new = new_complaint.title
@@ -337,8 +340,8 @@ def complaint_edit(request, pk):
                 old = old_complaint.reported
                 new = new_complaint.reported
                 change = "Waktu"
-            if old_complaint.status == new_complaint.status:
-                complaint.log_change(request.user, 'AC', change + ' diubah dari "' + old + '" menjadi "' + new + '" oleh '+ request.user.username)
+            if old_complaint.status == new_complaint.status and change != "":
+                complaint.log_change(str(request.user), 'AC', change + ' diubah dari "' + old + '" menjadi "' + new + '" oleh '+ request.user.username)
 
             if complaint_was_finished and complaint.status != 'F':
                 complaint.log_change(

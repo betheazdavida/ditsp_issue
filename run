@@ -1,0 +1,7 @@
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py loaddata division_seed.json
+python3 manage.py loaddata role_seed.json
+python3 manage.py loaddata origin_seed.json
+python3 manage.py loaddata user_seed.json
+python3 manage.py runserver 4040
