@@ -72,7 +72,7 @@
             <li><a href="{% url 'complaintManager:complaint_list_out' %}">
               <i class="fa fa-list"></i> Daftar Keluhan Keluar
             </a></li>
-            {% if user.member.isSuperadmin %}
+            {% if user.member.isInternal %}
             <li><a href="{% url 'complaintManager:index' %}">
               <i class="fa fa-list-alt"></i> Rangkuman
             </a></li>

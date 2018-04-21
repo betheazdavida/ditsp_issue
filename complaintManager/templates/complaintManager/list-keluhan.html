@@ -72,18 +72,20 @@
           <option value="title" {% if list_state.sort == 'title' %}selected{% endif %}>Judul</option>
         </select>
       </div>
-      <div class="form-group">
-        <div>
+      <div class="form-group row">
+        <div class="col-md-4">
           <label for="start_date"> Dari: </label>
           <input class="form-control" type="date" name="start_date" id="start_date" {% if start_date %}value={{ start_date }}{% endif %}>
         </div>
-        <br>
-        <div>
+        <div class="col-md-4">
           <label for="end_date"> Sampai: </label>
           <input class="form-control" type="date" name="end_date" id="end_date" {% if end_date %}value={{ end_date }}{% endif %}>
         </div>
+         <div class="col-md-4"></div>
+         <br/>
+        <button type="submit" class="btn btn-default">Submit</button>
       </div>
-      <button type="submit" class="btn btn-default">Submit</button>
+      
     </form>
 
     <table class="table table-condensed table-hover summary-report">

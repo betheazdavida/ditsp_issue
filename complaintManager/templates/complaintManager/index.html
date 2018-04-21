@@ -10,7 +10,7 @@
       </div>
       <div class="panel-body nopadding">
         <div class="form-group">
-          <form method="GET" action="{% url 'complaintManager:laporan' %}" enctype="multipart/form-data">
+          <form method="GET" onsubmit="return checkDate()" action="{% url 'complaintManager:laporan' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="col-md-3">
               <label for="start_date"> Dari: </label>
@@ -128,4 +128,20 @@
 {% block script %}
 <div id="graph-data" data-graph="{{ graph_json }}"></div>
 <script src="{% static 'complaintManager/js/home.js' %}"></script>
+<script>
+  function checkDate(){
+    console.log("checkdate");
+    startdate = document.getElementById("start_date").value;
+    enddate = document.getElementById("end_date").value;
+    // alert(startdate);
+    // alert(enddate);
+    if (startdate==""|| enddate=="") {
+      alert("Input range tanggal tidak valid");
+      return false;
+    } else {
+      // alert("true")
+      return true;
+    }
+  }
+</script>
 {% endblock %}
