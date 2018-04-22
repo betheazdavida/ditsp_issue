@@ -29,15 +29,15 @@ before_script:
 # To get Django tests to work you may need to create a settings file using
 # the following DATABASES:
 # 
-variables:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'ppl',
-            'USER': production_secrets['DB_USER'],
-            'PASSWORD': production_secrets['DB_PASSWORD'],
-        }
-    }
+# variables:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.mysql',
+#             'NAME': 'ppl',
+#             'USER': production_secrets['DB_USER'],
+#             'PASSWORD': production_secrets['DB_PASSWORD'],
+#         }
+#     }
 # and then adding `--settings app.settings.ci` (or similar) to the test command
 
 test:
