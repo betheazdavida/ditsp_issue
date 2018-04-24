@@ -107,6 +107,9 @@ class Member(models.Model):
 
     def isSuperadmin(self):
         return self.role.code == 'SA'
+    
+    def isInternal(self):
+        return self.role.origin.code == 'Intern'
 
     def isLeaderOf(self, complaint):
         return complaint.leader is None or complaint.leader in self.role.divisions.all()

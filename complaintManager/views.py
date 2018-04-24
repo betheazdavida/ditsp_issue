@@ -250,7 +250,7 @@ def complaint_create_public(request):
             complaint.is_public = False
             complaint.save()
 
-            send_email(complaint, True)
+            # send_email(complaint, True)
             # Create images for current complaint
             for image in request.FILES.getlist('images'):
                 compImg = ComplaintImages()
@@ -406,7 +406,9 @@ def user_edit(request, pk):
     organogram_divisions = user.member.role.divisions.all()
     if request.method == 'POST':
         user_form = UserEditForm(request.POST, prefix='user', instance=user)
-        member_form = MemberEditForm(request.POST,prefix='member',instance=user.member)
+        member_form = MemberCreateForm(request.POST,prefix='member',instance=user.member)
+        print("member="+str(member_form.is_valid()))
+        print("user="+str(user_form.is_valid()))
         if member_form.is_valid() and user_form.is_valid():
             user.save()
             member = member_form.save()
@@ -913,7 +915,7 @@ def update_status(request, pk):
         complaint.status = 'F'
         complaint.log_change(request.user, 'MD', 'Keluhan selesai dikerjakan.')
     complaint.save()
-    send_email(complaint, False)
+    # send_email(complaint, False)
     return redirect(reverse('complaintManager:complaint_status', args={pk}))
 
 

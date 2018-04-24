@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-15 -*-
 from django.utils.translation import ugettext_lazy as _
 from reportlab.graphics.widgets.markers import makeMarker
 from reportlab.graphics.charts.barcharts import VerticalBarChart
