@@ -49,4 +49,4 @@ test:
 #     DATABASE_URL: "jdbc:mysql://localhost:3306/ppl"
   script:
   - python manage.py test
-  - mysql -u root -p sarprassumiatun -D test_ppl -e "DROP DATABASE IF EXISTS test_ppl"
+  - mysql -u root -p ppl2018 -D test_ppl -e "DROP DATABASE IF EXISTS test_ppl"
