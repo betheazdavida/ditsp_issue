@@ -49,4 +49,4 @@ test:
 #     DATABASE_URL: "jdbc:mysql://localhost:3306/ppl"
   script:
   - python manage.py test
-  - echo "yes" | mysqladmin -uroot -pppl2018 drop if exists test_ppl
+  - echo "y" | mysqladmin -uroot -pppl2018 drop test_ppl
