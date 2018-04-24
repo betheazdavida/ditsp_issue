@@ -49,4 +49,4 @@ test:
 #     DATABASE_URL: "jdbc:mysql://localhost:3306/ppl"
   script:
   - python manage.py test
-  - mysqladmin -uroot -pppl2018 drop test_ppl
+  - mysqladmin -uroot -pppl2018 -f drop test_ppl
