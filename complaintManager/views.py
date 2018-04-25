@@ -146,7 +146,7 @@ def laporan(request):
             response['Content-Disposition'] = \
                 'attachment; filename={0}.pdf'.format(filename)
             buffer = BytesIO()
-            report = PdfPrint(buffer, 'A4')
+            report = PdfPrint(buffer, 'LA4')
             pdf = report.collective_report(last_complaints, filename, dateduration)
             response.write(pdf)
             return response
@@ -284,7 +284,7 @@ def complaint_download(request, pk):
         'attachment; filename={0}.pdf'.format(filename)
     buffer = BytesIO()
     report = PdfPrint(buffer, 'A4')
-    pdf = report.individual_report(complaint, filename)
+    pdf = report.individual_report(request, complaint, filename)
     response.write(pdf)
     return response
 
@@ -341,7 +341,7 @@ def complaint_edit(request, pk):
                 new = new_complaint.reported
                 change = "Waktu"
             if old_complaint.status == new_complaint.status and change != "":
-                complaint.log_change(str(request.user), 'AC', change + ' diubah dari "' + old + '" menjadi "' + new + '" oleh '+ request.user.username)
+                complaint.log_change(request.user, 'AC', change + ' diubah dari "' + str(old) + '" menjadi "' + str(new) + '" oleh '+ request.user.username)
 
             if complaint_was_finished and complaint.status != 'F':
                 complaint.log_change(

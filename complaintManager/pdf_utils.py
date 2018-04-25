@@ -9,7 +9,7 @@ from reportlab.graphics.charts.textlabels import Label
 from reportlab.graphics.shapes import Drawing
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
-from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib.pagesizes import letter, A4, landscape
 from reportlab.lib.units import mm
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
@@ -19,6 +19,8 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table,\
 from .models import Division, Log, ComplaintImages
 import datetime
 from reportlab.lib import utils
+import os.path
+from django.conf import settings
 
 
 class PdfPrint:
@@ -27,7 +29,9 @@ class PdfPrint:
     def __init__(self, buffer, pageSize):
         self.buffer = buffer
         # default format is A4
-        if pageSize == 'A4':
+        if pageSize == 'LA4':
+            self.pageSize = landscape(A4)
+        elif pageSize == 'A4':
             self.pageSize = A4
         self.width, self.height = self.pageSize
 
@@ -178,7 +182,7 @@ class PdfPrint:
         # d.add(bcl)
         return d
 
-    def individual_report(self, complaint, title):
+    def individual_report(self, request, complaint, title):
         # set some characteristics for pdf document
         doc = SimpleDocTemplate(
             self.buffer,
@@ -221,7 +225,7 @@ class PdfPrint:
         table_data.append(
             ['Jenis Keluhan', ': ' + divisi_string])
         table_data.append(
-            ['Deskripsi Keluhan', ': ' + complaint.description])
+            ['Deskripsi Keluhan', Paragraph(': ' + complaint.description, styles['BodyText'])])
         if (complaint.status == 'S'):
             status = 'Submitted'
         elif (complaint.status == 'P'):
@@ -236,7 +240,9 @@ class PdfPrint:
             ['Lokasi Kejadian', ': ' + complaint.location.name])
         # create document
         table = Table(table_data)
-        table.hAlign = 'LEFT'
+        table.setStyle(TableStyle(
+            [('VALIGN', (0, 0), (-1, -1), 'TOP'),
+             ('HALIGN', (0, 0), (-1, -1), 'LEFT')]))
         data.append(table)
         data.append(Spacer(1, 24))
         data.append(Paragraph('Log Perubahan: ', styles['Justify']))
@@ -248,30 +254,31 @@ class PdfPrint:
         logs = Log.objects.filter(complaint=complaint)
         for log in logs:
             date = str(log.date.strftime("%d-%m-%Y"))
-            logtable_data.append([date, log.description, log.creator])
+            logtable_data.append([date, Paragraph(log.description, styles['BodyText']), log.creator])
         logtable = Table(logtable_data)
         logtable.hAlign = 'LEFT'
         logtable.setStyle(TableStyle(
             [('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
              ('BOX', (0, 0), (-1, -1), 0.5, colors.black),
-             ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+             ('VALIGN', (0, 0), (-1, -1), 'TOP'),
              ('BACKGROUND', (0, 0), (-1, 0), colors.gray)]))
         data.append(Spacer(1, 12))
         data.append(logtable)
         data.append(Spacer(1, 24))
-        data.append(Paragraph('Media: ', styles['Justify']))
+        data.append(Paragraph('Foto: ', styles['Justify']))
         images = ComplaintImages.objects.filter(complaint=complaint)
+        ROOT = 'http://' + request.META['HTTP_HOST']
         for image in images:
             # img = Image('http://127.0.0.1:8888/media/' + str(image.src))
-            img = utils.ImageReader('http://127.0.0.1:8888/media/' + str(image.src))
+            img = utils.ImageReader(ROOT + '/media/' + str(image.src))
             iw, ih = img.getSize()
             aspect = ih / float(iw)
             if iw > ih:
                 width = 300
-                data.append(Image('http://127.0.0.1:8888/media/' + str(image.src), width, width * aspect))
+                data.append(Image(ROOT + '/media/' + str(image.src), width, width * aspect))
             else:
                 height = 300
-                data.append(Image('http://127.0.0.1:8888/media/' + str(image.src), height / aspect, height))
+                data.append(Image(ROOT + '/media/' + str(image.src), height / aspect, height))
         # insert a blank space
         data.append(Spacer(1, 12))
 
@@ -332,7 +339,7 @@ class PdfPrint:
                 status = 'Selesai'
             table_data.append(
                 [complaint.reported.strftime('%d-%m-%Y'),
-                 Paragraph(complaint.description, styles['Justify']),
+                 Paragraph(complaint.description, styles['BodyText']),
                  Paragraph(status, styles['Justify']),
                  Paragraph(divisi_string, styles['Justify']),
                  Paragraph(str(complaint.priority), styles['Justify']),
@@ -341,7 +348,9 @@ class PdfPrint:
                  Paragraph(str(complaint.member.role), styles['Justify'])])
         # create table
         wh_table = Table(table_data)
-        wh_table.hAlign = 'LEFT'
+        wh_table.setStyle(TableStyle(
+            [('VALIGN', (0, 0), (-1, -1), 'TOP'),
+             ('HALIGN', (0, 0), (-1, -1), 'LEFT')]))
         wh_table.setStyle(TableStyle(
             [('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
              ('BOX', (0, 0), (-1, -1), 0.5, colors.black),
