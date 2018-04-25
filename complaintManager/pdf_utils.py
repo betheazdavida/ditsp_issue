@@ -21,6 +21,7 @@ import datetime
 from reportlab.lib import utils
 import os.path
 from django.conf import settings
+import urllib.parse
 
 
 class PdfPrint:
@@ -270,15 +271,16 @@ class PdfPrint:
         ROOT = 'http://' + request.META['HTTP_HOST']
         for image in images:
             # img = Image('http://127.0.0.1:8888/media/' + str(image.src))
-            img = utils.ImageReader(ROOT + '/media/' + str(image.src))
+            imgurl = ROOT + '/media/' + urllib.parse.quote(str(image.src))
+            img = utils.ImageReader(imgurl)
             iw, ih = img.getSize()
             aspect = ih / float(iw)
             if iw > ih:
                 width = 300
-                data.append(Image(ROOT + '/media/' + str(image.src), width, width * aspect))
+                data.append(Image(imgurl, width, width * aspect))
             else:
                 height = 300
-                data.append(Image(ROOT + '/media/' + str(image.src), height / aspect, height))
+                data.append(Image(imgurl, height / aspect, height))
         # insert a blank space
         data.append(Spacer(1, 12))
 
